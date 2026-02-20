@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "MCP Portal Assistant",
+  "version": "1.0.0",
+  "description": "Assistant IA pour portail Angular (Simulateur Web MCP)",
+  "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://votre-portail-angular.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Ouvrir l'assistant MCP"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:*/*",
+        "https://votre-portail-angular.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portail de Démonstration MCP</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="layout">
+
+      <!-- ── Top Bar ───────────────────────────────────────────────────── -->
+      <header class="topbar">
+        <div class="brand">
+          <div class="icon">🏢</div>
+          <span>Portail Demo MCP</span>
+        </div>
+        <div class="spacer"></div>
+        <span class="badge badge-success">
+          <span class="dot pulse"></span>
+          MCP Actif
+        </span>
+        <span class="badge badge-primary" style="margin-left:8px;">
+          5 outils exposés
+        </span>
+      </header>
+
+      <!-- ── Main 3-column grid ────────────────────────────────────────── -->
+      <div class="main">
+
+        <!-- Sidebar gauche -->
+        <aside class="sidebar">
+          <section>
+            <h3>Navigation</h3>
+            <nav>
+              <div class="nav-item active">
+                <span class="icon">📊</span> Tableau de bord
+              </div>
+              <div class="nav-item">
+                <span class="icon">👥</span> Utilisateurs
+              </div>
+              <div class="nav-item">
+                <span class="icon">📄</span> Documents
+              </div>
+              <div class="nav-item">
+                <span class="icon">🔔</span> Notifications
+              </div>
+              <div class="nav-item">
+                <span class="icon">⚙️</span> Paramètres
+              </div>
+            </nav>
+          </section>
+
+          <section>
+            <h3>Outils MCP exposés</h3>
+            <ul id="sidebar-tools" class="tool-badge-list"></ul>
+          </section>
+
+          <section>
+            <div class="mcp-banner">
+              <span class="icon">🔌</span>
+              <span>
+                <strong>Extension détectée</strong><br>
+                Ouvrez le panneau latéral pour interroger l'IA.
+              </span>
+            </div>
+          </section>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1>Tableau de bord</h1>
+              <p>Vue d'ensemble du portail — Février 2026</p>
+            </div>
+            <span class="badge badge-primary">
+              <span class="dot pulse"></span>
+              Données en direct
+            </span>
+          </div>
+
+          <!-- Statistiques -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="label">Utilisateurs totaux</div>
+              <div class="value">142</div>
+              <div class="trend up">↑ +12 ce mois</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Utilisateurs actifs</div>
+              <div class="value" id="stat-active-users">98</div>
+              <div class="trend up">↑ 69% du total</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Documents</div>
+              <div class="value">1 247</div>
+              <div class="trend up">↑ +38 cette semaine</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Tickets ouverts</div>
+              <div class="value">14</div>
+              <div class="trend down">↓ 3 critiques</div>
+            </div>
+          </div>
+
+          <!-- Statistiques serveur -->
+          <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="stat-card">
+              <div class="label">Charge serveur</div>
+              <div class="value" style="font-size: 22px; color: var(--success);">23%</div>
+              <div class="trend">Nominal</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Disponibilité</div>
+              <div class="value" style="font-size: 22px; color: var(--success);">99.97%</div>
+              <div class="trend">30 derniers jours</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Stockage utilisé</div>
+              <div class="value" style="font-size: 22px; color: var(--warning);">68%</div>
+              <div class="trend">340 GB / 500 GB</div>
+            </div>
+          </div>
+
+          <!-- Table utilisateurs -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Utilisateurs récents</h2>
+              <span class="badge badge-primary">5 affichés</span>
+            </div>
+            <table id="users-table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Rôle</th>
+                  <th>Statut</th>
+                  <th>Dernière connexion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Rempli par app.js → renderUsersTable() -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Exemples de questions -->
+          <div class="card">
+            <div class="card-header">
+              <h2>💡 Exemples de questions pour l'assistant IA</h2>
+            </div>
+            <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-muted);">
+                « Qui sont les utilisateurs avec le statut <em>pending</em> ? »
+              </div>
+              <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-muted);">
+                « Combien d'utilisateurs actifs y a-t-il et quelle est la charge du serveur ? »
+              </div>
+              <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-muted);">
+                « Cherche les documents de catégorie Technique et liste mes notifications non lues. »
+              </div>
+              <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-muted);">
+                « Donne-moi le profil de Bob Martin et passe David Petit en statut actif. »
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Panneau d'activité MCP (droite) -->
+        <aside class="activity-panel">
+          <div class="panel-header">
+            <h2>🔌 Activité MCP</h2>
+            <button id="clear-log-btn">Effacer</button>
+          </div>
+          <div id="log-list" class="log-list">
+            <div id="log-empty" class="log-empty">
+              Aucune activité MCP pour l'instant.<br>
+              Ouvrez le panneau de l'extension et posez une question.
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /.main -->
+    </div><!-- /.layout -->
+
+    <script src="app.js"></script>
+  </body>
+</html>

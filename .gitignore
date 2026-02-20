@@ -1,0 +1,23 @@
+# Dépendances
+node_modules/
+
+# Build de l'extension
+web-mcp-extension/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environnement
+.env
+.env.local
+
+# Éditeurs
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCP Portal Assistant</title>
+    <style>
+      /* ── Reset & Variables (charte Orange) ────────────────────────────── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg:            #1a1a1a;
+        --surface:       #242424;
+        --surface-alt:   #2d2d2d;
+        --border:        #3a3a3a;
+        --primary:       #ff7900;
+        --primary-hover: #f16e00;
+        --primary-dim:   rgba(255,121,0,0.12);
+        --primary-dim2:  rgba(255,121,0,0.25);
+        --user-bg:       #ff7900;
+        --user-text:     #1a1a1a;
+        --assistant-bg:  #2d2d2d;
+        --error-bg:      #3b1212;
+        --error-border:  #7f1d1d;
+        --success:       #4caf50;
+        --warning:       #ff9800;
+        --text:          #f5f5f5;
+        --text-muted:    #8c8c8c;
+        --radius:        12px;
+        --font:          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      html, body {
+        height: 100%;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      /* ── Layout ────────────────────────────────────────────────────────── */
+      .app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* ── Header ────────────────────────────────────────────────────────── */
+      header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 14px;
+        background: var(--surface);
+        border-bottom: 2px solid var(--primary);
+        flex-shrink: 0;
+      }
+
+      header .logo {
+        width: 30px;
+        height: 30px;
+        background: var(--primary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+
+      header h1 {
+        font-size: 14px;
+        font-weight: 700;
+        flex: 1;
+      }
+
+      #model-badge {
+        font-size: 10px;
+        font-family: monospace;
+        color: var(--primary);
+        background: var(--primary-dim);
+        border: 1px solid rgba(255,121,0,0.35);
+        border-radius: 6px;
+        padding: 2px 7px;
+        max-width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      header a.settings-link {
+        color: var(--text-muted);
+        font-size: 17px;
+        text-decoration: none;
+        cursor: pointer;
+        line-height: 1;
+        transition: color 0.15s;
+        flex-shrink: 0;
+      }
+      header a.settings-link:hover { color: var(--primary); }
+
+      /* ── Tools Panel ───────────────────────────────────────────────────── */
+      .tools-panel {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        max-height: 200px;
+      }
+
+      .tools-panel.collapsed { max-height: 0; }
+
+      .tools-panel-inner { padding: 8px 14px 12px; }
+
+      /* Barre de titre du panneau outils */
+      .tools-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 14px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .tools-panel-header .tools-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tools-count-badge {
+        background: var(--primary-dim);
+        color: var(--primary);
+        border: 1px solid rgba(255,121,0,0.3);
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 6px;
+        display: none;
+      }
+      .tools-count-badge.visible { display: inline; }
+
+      #toggle-tools-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: background 0.12s, color 0.12s;
+      }
+      #toggle-tools-btn:hover { background: var(--primary-dim); color: var(--primary); }
+
+      #toggle-tools-btn .toggle-icon {
+        display: inline-block;
+        font-size: 9px;
+        transition: transform 0.25s;
+      }
+      #toggle-tools-btn.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+      #tools-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-height: 130px;
+        overflow-y: auto;
+      }
+
+      .tool-item {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 8px;
+        padding: 6px 10px;
+      }
+
+      .tool-name {
+        font-weight: 700;
+        font-size: 12px;
+        color: var(--primary);
+        display: block;
+        font-family: monospace;
+      }
+
+      .tool-desc {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #no-tools-msg {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-align: center;
+        padding: 4px 0;
+      }
+
+      /* ── Status Bar ────────────────────────────────────────────────────── */
+      .status-bar {
+        font-size: 11px;
+        padding: 4px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        color: var(--text-muted);
+        flex-shrink: 0;
+      }
+      .status-bar.ready   { color: var(--success); }
+      .status-bar.working { color: var(--warning); animation: pulse-text 1.5s infinite; }
+      .status-bar.error   { color: #ef5350; }
+
+      @keyframes pulse-text {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.5; }
+      }
+
+      /* ── Chat Window ───────────────────────────────────────────────────── */
+      #chat-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        scroll-behavior: smooth;
+      }
+
+      .message {
+        display: flex;
+        flex-direction: column;
+        max-width: 90%;
+      }
+
+      .message.user { align-self: flex-end; align-items: flex-end; }
+      .message.assistant { align-self: flex-start; align-items: flex-start; }
+      .message.error { align-self: flex-start; align-items: flex-start; }
+
+      .bubble {
+        padding: 10px 14px;
+        border-radius: 16px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 13px;
+      }
+
+      .message.user .bubble {
+        background: var(--user-bg);
+        color: #1a1a1a;
+        font-weight: 500;
+        border-bottom-right-radius: 4px;
+      }
+
+      .message.assistant .bubble {
+        background: var(--assistant-bg);
+        border: 1px solid var(--border);
+        border-bottom-left-radius: 4px;
+      }
+
+      .message.error .bubble {
+        background: var(--error-bg);
+        border: 1px solid var(--error-border);
+        border-bottom-left-radius: 4px;
+        color: #fca5a5;
+      }
+
+      /* Typing indicator */
+      .typing {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 12px 14px;
+      }
+
+      .typing span {
+        width: 7px;
+        height: 7px;
+        background: var(--primary);
+        border-radius: 50%;
+        animation: bounce 1.2s infinite;
+        opacity: 0.8;
+      }
+      .typing span:nth-child(2) { animation-delay: 0.2s; }
+      .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+      @keyframes bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-6px); }
+      }
+
+      /* ── Input Area ────────────────────────────────────────────────────── */
+      .input-area {
+        display: flex;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      #user-input {
+        flex: 1;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 13px;
+        resize: none;
+        line-height: 1.4;
+        max-height: 120px;
+        overflow-y: auto;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+
+      #user-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(255,121,0,0.2);
+      }
+
+      #user-input::placeholder { color: var(--text-muted); }
+
+      #send-btn {
+        background: var(--primary);
+        border: none;
+        border-radius: 10px;
+        color: #1a1a1a;
+        font-size: 17px;
+        font-weight: 700;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, opacity 0.15s, transform 0.1s;
+        flex-shrink: 0;
+        align-self: flex-end;
+      }
+
+      #send-btn:hover:not(:disabled) {
+        background: var(--primary-hover);
+        transform: scale(1.05);
+      }
+
+      #send-btn:active:not(:disabled) { transform: scale(0.96); }
+
+      #send-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      /* ── Scrollbars ────────────────────────────────────────────────────── */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255,121,0,0.3); }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+
+      <!-- En-tête -->
+      <header>
+        <div class="logo">🤖</div>
+        <h1>MCP Assistant</h1>
+        <span id="model-badge">gemini-2.0-flash</span>
+        <a class="settings-link" href="options.html" target="_blank" title="Paramètres">⚙️</a>
+      </header>
+
+      <!-- Barre de titre du panneau outils (toujours visible) -->
+      <div class="tools-panel-header">
+        <span class="tools-label">
+          🔧 Outils détectés
+          <span id="tools-count-badge" class="tools-count-badge">0</span>
+        </span>
+        <button id="toggle-tools-btn" aria-expanded="true" aria-controls="tools-panel">
+          <span class="toggle-icon">▼</span>
+          <span id="toggle-tools-label">Masquer</span>
+        </button>
+      </div>
+
+      <!-- Panneau des outils (collapsible) -->
+      <section id="tools-panel" class="tools-panel" aria-label="Outils détectés">
+        <div class="tools-panel-inner">
+          <ul id="tools-list"></ul>
+          <p id="no-tools-msg">Aucun outil détecté — naviguez vers un portail compatible.</p>
+        </div>
+      </section>
+
+      <!-- Barre de statut -->
+      <div id="status-bar" class="status-bar" role="status">
+        En attente de la détection d'outils sur la page…
+      </div>
+
+      <!-- Fenêtre de chat -->
+      <main id="chat-container" aria-live="polite">
+        <div class="message assistant">
+          <div class="bubble">
+            👋 Bonjour ! Je suis votre assistant MCP.<br>
+            Une fois les outils du portail détectés, vous pourrez me poser vos questions.
+          </div>
+        </div>
+      </main>
+
+      <!-- Zone de saisie -->
+      <div class="input-area">
+        <textarea
+          id="user-input"
+          rows="1"
+          placeholder="Posez votre question… (Entrée pour envoyer)"
+          aria-label="Message"
+        ></textarea>
+        <button id="send-btn" disabled aria-label="Envoyer">➤</button>
+      </div>
+    </div>
+
+    <!-- Le bundle généré par esbuild (npm run build) -->
+    <script src="sidepanel.js" type="module"></script>
+  </body>
+</html>

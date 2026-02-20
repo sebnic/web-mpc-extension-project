@@ -1,0 +1,16 @@
+{
+  "name": "web-mcp-extension",
+  "version": "1.0.0",
+  "description": "Extension Chrome MCP Portal Bridge — Assistant IA pour portail Angular",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:dev": "node build.mjs --dev",
+    "watch": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

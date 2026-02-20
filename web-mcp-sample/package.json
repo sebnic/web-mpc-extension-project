@@ -1,0 +1,12 @@
+{
+  "name": "web-mcp-sample",
+  "version": "1.0.0",
+  "description": "Site de démonstration exposant des outils MCP pour l'extension Chrome",
+  "scripts": {
+    "start": "npx serve . --listen 3000 --no-clipboard",
+    "start:5500": "npx serve . --listen 5500 --no-clipboard"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
