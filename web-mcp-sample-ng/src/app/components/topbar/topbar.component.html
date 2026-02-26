@@ -1,0 +1,14 @@
+<header class="topbar">
+  <div class="brand">
+    <div class="icon">🏢</div>
+    <span>Portail Demo MCP</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="badge badge-success">
+    <span class="dot pulse"></span>
+    MCP Actif
+  </span>
+  <span class="badge badge-primary" style="margin-left:8px;">
+    {{ (toolCount$ | async) ?? 0 }} outils exposés
+  </span>
+</header>

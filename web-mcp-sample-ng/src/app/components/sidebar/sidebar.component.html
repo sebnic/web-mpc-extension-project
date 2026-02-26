@@ -1,0 +1,37 @@
+<aside class="sidebar">
+  <section>
+    <h3>Navigation</h3>
+    <nav>
+      <div
+        *ngFor="let item of navItems"
+        class="nav-item"
+        [class.active]="item.active">
+        <span class="icon">{{ item.icon }}</span> {{ item.label }}
+      </div>
+    </nav>
+  </section>
+
+  <section>
+    <h3>Outils MCP exposés</h3>
+    <ul class="tool-badge-list">
+      <li *ngFor="let tool of (tools$ | async)" class="tool-badge-item">
+        <div class="tool-status"></div>
+        <span class="tool-name">{{ tool.name }}</span>
+        <span class="tool-calls">{{ tool.callCount }}</span>
+      </li>
+      <li *ngIf="(tools$ | async)?.length === 0" class="tool-badge-item" style="color: var(--text-muted); font-style: italic;">
+        En attente d'enregistrement…
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="mcp-banner">
+      <span class="icon">🔌</span>
+      <span>
+        <strong>Extension détectée</strong><br>
+        Ouvrez le panneau latéral pour interroger l'IA.
+      </span>
+    </div>
+  </section>
+</aside>

@@ -1,0 +1,25 @@
+<aside class="activity-panel">
+  <div class="panel-header">
+    <h2>🔌 Activité MCP</h2>
+    <button (click)="clear()">Effacer</button>
+  </div>
+  <div class="log-list">
+    <ng-container *ngIf="entries$ | async as entries">
+      <div
+        *ngFor="let entry of entries; trackBy: trackById"
+        class="log-entry">
+        <div class="log-type" [ngClass]="'log-type-' + entry.type">
+          {{ labelFor(entry.type) }}
+        </div>
+        <div *ngIf="entry.toolName" class="log-tool">{{ entry.toolName }}</div>
+        <div class="log-body">{{ entry.body | json }}</div>
+        <div class="log-time">{{ formatTime(entry.timestamp) }}</div>
+      </div>
+
+      <div *ngIf="entries.length === 0" class="log-empty">
+        Aucune activité MCP pour l'instant.<br>
+        Ouvrez le panneau de l'extension et posez une question.
+      </div>
+    </ng-container>
+  </div>
+</aside>

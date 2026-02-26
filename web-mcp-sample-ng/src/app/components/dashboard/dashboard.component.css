@@ -1,0 +1,10 @@
+/* DashboardComponent — styles propres au composant */
+.example-question {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}

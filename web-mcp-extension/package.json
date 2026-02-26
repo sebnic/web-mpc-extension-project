@@ -5,12 +5,16 @@
   "scripts": {
     "build": "node build.mjs",
     "build:dev": "node build.mjs --dev",
-    "watch": "node build.mjs --watch"
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0"
+    "@types/chrome": "^0.1.37",
+    "@types/node": "^14.18.63",
+    "esbuild": "^0.24.0",
+    "typescript": "^4.6.4"
   }
 }

@@ -4,6 +4,9 @@ node_modules/
 # Build de l'extension
 web-mcp-extension/dist/
 
+# Build Angular
+web-mcp-sample-ng/dist/
+
 # Logs
 *.log
 npm-debug.log*

@@ -1,0 +1,98 @@
+<main class="content" *ngIf="stats$ | async as stats">
+  <div class="page-header">
+    <div>
+      <h1>Tableau de bord</h1>
+      <p>Vue d'ensemble du portail — Février 2026</p>
+    </div>
+    <span class="badge badge-primary">
+      <span class="dot pulse"></span>
+      Données en direct
+    </span>
+  </div>
+
+  <!-- Statistiques principales -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">Utilisateurs totaux</div>
+      <div class="value">{{ stats.totalUsers }}</div>
+      <div class="trend up">↑ +12 ce mois</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Utilisateurs actifs</div>
+      <div class="value">{{ stats.activeUsers }}</div>
+      <div class="trend up">↑ 69% du total</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Documents</div>
+      <div class="value">{{ stats.documentsCount | number }}</div>
+      <div class="trend up">↑ +38 cette semaine</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Tickets ouverts</div>
+      <div class="value">{{ stats.openTickets }}</div>
+      <div class="trend down">↓ 3 critiques</div>
+    </div>
+  </div>
+
+  <!-- Statistiques serveur -->
+  <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+      <div class="label">Charge serveur</div>
+      <div class="value" style="font-size: 22px; color: var(--success);">{{ stats.serverLoad }}</div>
+      <div class="trend">Nominal</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Disponibilité</div>
+      <div class="value" style="font-size: 22px; color: var(--success);">{{ stats.uptime }}</div>
+      <div class="trend">30 derniers jours</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Stockage utilisé</div>
+      <div class="value" style="font-size: 22px; color: var(--warning);">{{ stats.storageUsed }}</div>
+      <div class="trend">340 GB / 500 GB</div>
+    </div>
+  </div>
+
+  <!-- Table utilisateurs -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Utilisateurs récents</h2>
+      <span class="badge badge-primary">{{ (users$ | async)?.length }} affichés</span>
+    </div>
+    <table id="users-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Statut</th>
+          <th>Dernière connexion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of (users$ | async)">
+          <td>
+            <span class="avatar" [style.background]="avatarBg(user.id)">{{ user.avatar }}</span>
+            {{ user.name }}
+          </td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td><span class="status-pill" [ngClass]="'status-' + user.status">{{ user.status }}</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">{{ formatTime(user.lastLogin) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Exemples de questions -->
+  <div class="card">
+    <div class="card-header">
+      <h2>💡 Exemples de questions pour l'assistant IA</h2>
+    </div>
+    <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+      <div *ngFor="let example of examples" class="example-question">
+        {{ example }}
+      </div>
+    </div>
+  </div>
+</main>

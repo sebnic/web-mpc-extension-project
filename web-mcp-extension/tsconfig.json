@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    // ── Cible & modules ───────────────────────────────────────────────────
+    "target": "ES2020",
+    "module": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+
+    // ── Vérification stricte ─────────────────────────────────────────────
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // ── Interopérabilité ─────────────────────────────────────────────────
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    // Limite TypeScript aux seuls types Chrome — évite les conflits
+    // avec @types/node (incompatible avec TypeScript 4.6)
+    "types": ["chrome"],
+
+    // ── Émission ─────────────────────────────────────────────────────────
+    // esbuild transpile les .ts directement — tsc sert uniquement
+    // pour la vérification de types (typecheck).
+    "noEmit": true,
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
