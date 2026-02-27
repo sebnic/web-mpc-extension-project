@@ -18,9 +18,11 @@ class BackgroundService {
   private readonly portalContexts = new Map<number, McpTool[]>();
 
   constructor() {
+    console.log('[MCP BackgroundService] Service Worker démarré.');
     this.configureSidePanel();
     this.bindMessageRouter();
     this.bindTabCleanup();
+    this.restoreFromStorage();
   }
 
   // ── Configuration ────────────────────────────────────────────────────────
@@ -54,8 +56,13 @@ class BackgroundService {
         }
 
         if (message.type === 'GET_TOOLS_FOR_TAB') {
-          sendResponse({ tools: this.getToolsForTab(message.tabId) });
-          return true;
+          // Toujours lire depuis storage pour obtenir l'état le plus récent
+          chrome.storage.local.get('mcp_portal_contexts', (res) => {
+            const map = res?.mcp_portal_contexts ?? {};
+            const tools: McpTool[] = map?.[String(message.tabId)] ?? [];
+            sendResponse({ tools });
+          });
+          return true; // indicate async response
         }
 
         if (message.type === 'EXECUTE_TOOL_REQUEST') {
@@ -84,6 +91,9 @@ class BackgroundService {
     chrome.runtime
       .sendMessage({ type: 'CONTEXT_UPDATED', tabId, tools } as ExtensionMessage)
       .catch(() => {});
+
+    // Persister l'état pour survivre au cycle de vie du service worker
+    this.persistContexts();
   }
 
   /** Retourne les outils enregistrés pour un onglet donné */
@@ -116,6 +126,33 @@ class BackgroundService {
   private bindTabCleanup(): void {
     chrome.tabs.onRemoved.addListener((tabId: number) => {
       this.portalContexts.delete(tabId);
+      this.persistContexts();
+    });
+  }
+
+  /** Persiste le mapping tabId -> tools dans chrome.storage.local */
+  private persistContexts(): void {
+    try {
+      const obj: Record<string, McpTool[]> = {};
+      for (const [tabId, tools] of this.portalContexts.entries()) {
+        obj[String(tabId)] = tools;
+      }
+      chrome.storage.local.set({ mcp_portal_contexts: obj });
+    } catch (e) {
+      console.error('[MCP BackgroundService] Erreur persistContexts :', e);
+    }
+  }
+
+  /** Restaure l'état précédemment persité (appelé au démarrage du SW) */
+  private restoreFromStorage(): void {
+    chrome.storage.local.get('mcp_portal_contexts', (res) => {
+      const map = res?.mcp_portal_contexts ?? {};
+      for (const [k, v] of Object.entries(map)) {
+        const tabId = Number(k);
+        if (!Number.isNaN(tabId) && Array.isArray(v)) {
+          this.portalContexts.set(tabId, v as McpTool[]);
+        }
+      }
     });
   }
 }

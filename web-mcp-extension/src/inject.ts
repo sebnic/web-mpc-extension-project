@@ -114,7 +114,17 @@ class ModelContextPatcher {
   /** Notifie les scripts de la page que le patch est opérationnel */
   private signalReady(): void {
     console.log('[MCP ModelContextPatcher] Dispatch MCP_INJECT_READY');
+    // Flag global pour que les pages qui s'initialisent après l'injection
+    // puissent vérifier l'état sans dépendre d'un event listener timing-sensitive.
+    try {
+      (window as any).__MCP_INJECT_READY = true;
+    } catch (e) {
+      // ignore
+    }
     window.dispatchEvent(new CustomEvent('MCP_INJECT_READY'));
+    // Rediffuse légèrement plus tard pour couvrir le cas où l'app
+    // attache son listener juste après le dispatch initial.
+    setTimeout(() => window.dispatchEvent(new CustomEvent('MCP_INJECT_READY')), 50);
   }
 }
 

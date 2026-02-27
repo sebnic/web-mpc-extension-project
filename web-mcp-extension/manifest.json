@@ -6,7 +6,8 @@
   "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
   "host_permissions": [
     "http://localhost:*/*",
-    "https://votre-portail-angular.com/*"
+    "https://votre-portail-angular.com/*",
+    "http://127.0.0.1:*/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -22,7 +23,8 @@
     {
       "matches": [
         "http://localhost:*/*",
-        "https://votre-portail-angular.com/*"
+        "https://votre-portail-angular.com/*",
+        "http://127.0.0.1:*/*"
       ],
       "js": ["content.js"],
       "run_at": "document_start"
