@@ -7,7 +7,7 @@
  *   - L'extension (background.ts / sidepanel.ts) via chrome.runtime
  */
 
-import type { McpTool, ExtensionMessage, ToolResponse } from './types';
+import type { McpTool, McpResource, McpPrompt, ExtensionMessage, ToolResponse } from './types';
 
 const TOOL_EXECUTION_TIMEOUT_MS = 10_000;
 
@@ -19,6 +19,9 @@ class ContentBridge {
   constructor() {
     this.injectScript();
     this.listenForDiscoveredTools();
+    this.listenForDiscoveredResources();
+    this.listenForDiscoveredPrompts();
+    this.listenForSamplingRequests();
     this.listenForExecutionRequests();
   }
 
@@ -41,8 +44,7 @@ class ContentBridge {
   // ── Page → Extension ─────────────────────────────────────────────────────
 
   /** Écoute les outils découverts par inject.ts et les relaie au background */
-  private listenForDiscoveredTools(): void {
-    window.addEventListener('MCP_TOOL_DISCOVERED', (event: Event) => {
+  private listenForDiscoveredTools(): void {    window.addEventListener('MCP_TOOL_DISCOVERED', (event: Event) => {
       const tool = (event as CustomEvent<McpTool>).detail;
       if (!tool?.name) {
         console.warn("[MCP ContentBridge] Événement sans nom d'outil, ignoré.");
@@ -62,6 +64,69 @@ class ContentBridge {
     });
   }
 
+  // ── Page → Extension (Resources & Prompts) ──────────────────────────────
+
+  /** Écoute les ressources découvertes par inject.ts et les relaie au background */
+  private listenForDiscoveredResources(): void {
+    window.addEventListener('MCP_RESOURCE_DISCOVERED', (event: Event) => {
+      const resource = (event as CustomEvent<McpResource>).detail;
+      if (!resource?.name) return;
+      console.log('[MCP ContentBridge] Ressource découverte :', resource.name);
+      chrome.runtime.sendMessage(
+        { type: 'NEW_RESOURCE_AVAILABLE', resource } as ExtensionMessage,
+        (resp: unknown) => {
+          if (chrome.runtime.lastError) {
+            console.error('[MCP ContentBridge] ❌ NEW_RESOURCE_AVAILABLE erreur :', chrome.runtime.lastError.message);
+          } else {
+            console.log('[MCP ContentBridge] ✅ NEW_RESOURCE_AVAILABLE transmis :', resp);
+          }
+        },
+      );
+    });
+  }
+
+  /** Écoute les prompts découverts par inject.ts et les relaie au background */
+  private listenForDiscoveredPrompts(): void {
+    window.addEventListener('MCP_PROMPT_DISCOVERED', (event: Event) => {
+      const prompt = (event as CustomEvent<McpPrompt>).detail;
+      if (!prompt?.name) return;
+      console.log('[MCP ContentBridge] Prompt découvert :', prompt.name);
+      chrome.runtime.sendMessage(
+        { type: 'NEW_PROMPT_AVAILABLE', prompt } as ExtensionMessage,
+        (resp: unknown) => {
+          if (chrome.runtime.lastError) {
+            console.error('[MCP ContentBridge] ❌ NEW_PROMPT_AVAILABLE erreur :', chrome.runtime.lastError.message);
+          } else {
+            console.log('[MCP ContentBridge] ✅ NEW_PROMPT_AVAILABLE transmis :', resp);
+          }
+        },
+      );
+    });
+  }
+
+  /** Écoute les demandes requestSampling de la page et les envoie au background */
+  private listenForSamplingRequests(): void {
+    window.addEventListener('MCP_SAMPLING_REQUEST', (event: Event) => {
+      const { requestId, params } = (event as CustomEvent<{ requestId: string; params: unknown }>).detail;
+      if (!requestId) return;
+      console.log('[MCP ContentBridge] SAMPLING_REQUEST :', requestId);
+      chrome.runtime.sendMessage(
+        { type: 'SAMPLING_REQUEST', requestId, params } as ExtensionMessage,
+        (response: { result?: unknown; error?: string }) => {
+          if (chrome.runtime.lastError) {
+            window.dispatchEvent(new CustomEvent('MCP_SAMPLING_RESULT', {
+              detail: { requestId, error: chrome.runtime.lastError.message },
+            }));
+            return;
+          }
+          window.dispatchEvent(new CustomEvent('MCP_SAMPLING_RESULT', {
+            detail: { requestId, result: response?.result, error: response?.error },
+          }));
+        },
+      );
+    });
+  }
+
   // ── Extension → Page ─────────────────────────────────────────────────────
 
   /** Écoute les demandes d'exécution du Side Panel et les relaie à la page */
@@ -76,8 +141,48 @@ class ContentBridge {
           this.executeOnPage(request, sendResponse);
           return true; // canal asynchrone
         }
+        if (request.type === 'READ_RESOURCE_ON_PAGE') {
+          this.readResourceOnPage(request, sendResponse);
+          return true;
+        }
+        if (request.type === 'GET_PROMPT_ON_PAGE') {
+          this.getPromptOnPage(request, sendResponse);
+          return true;
+        }
       },
     );
+  }
+
+  /** Demande la lecture d'une ressource MCP à la page */
+  private readResourceOnPage(
+    request: Extract<ExtensionMessage, { type: 'READ_RESOURCE_ON_PAGE' }>,
+    sendResponse: (response?: unknown) => void,
+  ): void {
+    const { resourceName, callId } = request;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ callId: string; result?: unknown; error?: string }>).detail;
+      if (detail?.callId !== callId) return;
+      window.removeEventListener('READ_RESOURCE_RESULT', handler);
+      sendResponse(detail.error ? { status: 'error', result: { error: detail.error } } : { status: 'success', result: detail.result });
+    };
+    window.addEventListener('READ_RESOURCE_RESULT', handler);
+    window.dispatchEvent(new CustomEvent('READ_RESOURCE_ON_PAGE', { detail: { resourceName, callId } }));
+  }
+
+  /** Demande l'invocation d'un prompt MCP à la page */
+  private getPromptOnPage(
+    request: Extract<ExtensionMessage, { type: 'GET_PROMPT_ON_PAGE' }>,
+    sendResponse: (response?: unknown) => void,
+  ): void {
+    const { promptName, promptArgs, callId } = request;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ callId: string; result?: unknown; error?: string }>).detail;
+      if (detail?.callId !== callId) return;
+      window.removeEventListener('GET_PROMPT_RESULT', handler);
+      sendResponse(detail.error ? { status: 'error', result: { error: detail.error } } : { status: 'success', result: detail.result });
+    };
+    window.addEventListener('GET_PROMPT_RESULT', handler);
+    window.dispatchEvent(new CustomEvent('GET_PROMPT_ON_PAGE', { detail: { promptName, promptArgs, callId } }));
   }
 
   /**

@@ -6,7 +6,7 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
-import type { McpTool, ExtensionMessage, ExtensionSettings } from './types';
+import type { McpTool, McpResource, McpPrompt, ExtensionMessage, ExtensionSettings, SamplingRequest, SamplingResponse } from './types';
 
 type StatusType = 'idle' | 'ready' | 'working' | 'error';
 type MessageRole = 'user' | 'assistant' | 'error';
@@ -22,6 +22,8 @@ class SidePanelController {
   private genaiClient: GoogleGenAI | null = null;
   private chatSession: ReturnType<GoogleGenAI['chats']['create']> | null = null;
   private currentTools: McpTool[] = [];
+  private currentResources: McpResource[] = [];
+  private currentPrompts: McpPrompt[] = [];
   private activeTabId: number | null = null;
 
   // ── Références DOM ────────────────────────────────────────────────────────
@@ -36,10 +38,24 @@ class SidePanelController {
   private readonly toolsPanelEl     = document.getElementById('tools-panel')       as HTMLElement | null;
   private readonly toggleToolsLabel = document.getElementById('toggle-tools-label')as HTMLSpanElement | null;
   private readonly modelBadge       = document.getElementById('model-badge')       as HTMLSpanElement | null;
+  // Resources panel
+  private readonly resourcesList        = document.getElementById('resources-list')        as HTMLUListElement | null;
+  private readonly resourcesCountBadge  = document.getElementById('resources-count-badge') as HTMLSpanElement | null;
+  private readonly toggleResourcesBtn   = document.getElementById('toggle-resources-btn')  as HTMLButtonElement | null;
+  private readonly resourcesPanelEl     = document.getElementById('resources-panel')       as HTMLElement | null;
+  private readonly noResourcesMsg       = document.getElementById('no-resources-msg')      as HTMLParagraphElement | null;
+  // Prompts panel
+  private readonly promptsList        = document.getElementById('prompts-list')        as HTMLUListElement | null;
+  private readonly promptsCountBadge  = document.getElementById('prompts-count-badge') as HTMLSpanElement | null;
+  private readonly togglePromptsBtn   = document.getElementById('toggle-prompts-btn')  as HTMLButtonElement | null;
+  private readonly promptsPanelEl     = document.getElementById('prompts-panel')       as HTMLElement | null;
+  private readonly noPromptsMsg       = document.getElementById('no-prompts-msg')      as HTMLParagraphElement | null;
 
   constructor() {
     this.bindSendForm();
     this.bindTogglePanel();
+    this.bindToggleResourcesPanel();
+    this.bindTogglePromptsPanel();
     this.bindStorageChanges();
     this.init().catch(console.error);
   }
@@ -91,6 +107,55 @@ class SidePanelController {
         <span class="tool-desc">${tool.description || 'Pas de description.'}</span>
       `;
       this.toolsList.appendChild(item);
+    });
+  }
+
+  private renderResources(resources: McpResource[]): void {
+    if (!this.resourcesList) return;
+    this.resourcesList.innerHTML = '';
+    const count = resources?.length ?? 0;
+    if (this.resourcesCountBadge) {
+      this.resourcesCountBadge.textContent = String(count);
+      this.resourcesCountBadge.classList.toggle('visible', count > 0);
+    }
+    if (!resources || resources.length === 0) {
+      if (this.noResourcesMsg) this.noResourcesMsg.style.display = 'block';
+      return;
+    }
+    if (this.noResourcesMsg) this.noResourcesMsg.style.display = 'none';
+    resources.forEach((resource) => {
+      const item = document.createElement('li');
+      item.className = 'tool-item';
+      item.innerHTML = `
+        <span class="tool-name">${resource.name}</span>
+        <span class="tool-desc">${resource.description || 'Pas de description.'}${resource.mimeType ? ` <em>(${resource.mimeType})</em>` : ''}</span>
+      `;
+      this.resourcesList!.appendChild(item);
+    });
+  }
+
+  private renderPrompts(prompts: McpPrompt[]): void {
+    if (!this.promptsList) return;
+    this.promptsList.innerHTML = '';
+    const count = prompts?.length ?? 0;
+    if (this.promptsCountBadge) {
+      this.promptsCountBadge.textContent = String(count);
+      this.promptsCountBadge.classList.toggle('visible', count > 0);
+    }
+    if (!prompts || prompts.length === 0) {
+      if (this.noPromptsMsg) this.noPromptsMsg.style.display = 'block';
+      return;
+    }
+    if (this.noPromptsMsg) this.noPromptsMsg.style.display = 'none';
+    prompts.forEach((prompt) => {
+      const args = prompt.arguments?.map((a) => a.name).join(', ') ?? '';
+      const item = document.createElement('li');
+      item.className = 'tool-item';
+      item.innerHTML = `
+        <span class="tool-name">${prompt.name}</span>
+        <span class="tool-desc">${prompt.description || 'Pas de description.'}${args ? ` <em>[${args}]</em>` : ''}</span>
+      `;
+      this.promptsList!.appendChild(item);
     });
   }
 
@@ -237,6 +302,7 @@ class SidePanelController {
       if (tabs[0]?.id === undefined) return;
       this.activeTabId = tabs[0].id;
 
+      // Load tools
       chrome.runtime.sendMessage(
         { type: 'GET_TOOLS_FOR_TAB', tabId: this.activeTabId } as ExtensionMessage,
         (res: { tools?: McpTool[] }) => {
@@ -251,9 +317,31 @@ class SidePanelController {
           }
         },
       );
+
+      // Load resources
+      chrome.runtime.sendMessage(
+        { type: 'GET_RESOURCES_FOR_TAB', tabId: this.activeTabId! } as ExtensionMessage,
+        (res: { resources?: McpResource[] }) => {
+          if (res?.resources) {
+            this.currentResources = res.resources;
+            this.renderResources(this.currentResources);
+          }
+        },
+      );
+
+      // Load prompts
+      chrome.runtime.sendMessage(
+        { type: 'GET_PROMPTS_FOR_TAB', tabId: this.activeTabId! } as ExtensionMessage,
+        (res: { prompts?: McpPrompt[] }) => {
+          if (res?.prompts) {
+            this.currentPrompts = res.prompts;
+            this.renderPrompts(this.currentPrompts);
+          }
+        },
+      );
     });
 
-    chrome.runtime.onMessage.addListener((message: ExtensionMessage) => {
+    chrome.runtime.onMessage.addListener((message: ExtensionMessage, _sender, sendResponse): boolean | void => {
       if (message.type === 'CONTEXT_UPDATED' && message.tabId === this.activeTabId) {
         this.currentTools = message.tools;
         this.renderTools(this.currentTools);
@@ -261,7 +349,68 @@ class SidePanelController {
         this.setStatus(`✅ ${this.currentTools.length} outil(s) disponible(s)`, 'ready');
         this.chatSession = null;
       }
+      if (message.type === 'RESOURCE_CONTEXT_UPDATED' && message.tabId === this.activeTabId) {
+        this.currentResources = message.resources;
+        this.renderResources(this.currentResources);
+      }
+      if (message.type === 'PROMPT_CONTEXT_UPDATED' && message.tabId === this.activeTabId) {
+        this.currentPrompts = message.prompts;
+        this.renderPrompts(this.currentPrompts);
+      }
+      if (message.type === 'SAMPLING_REQUEST') {
+        this.handleSamplingRequest(message.requestId, message.params)
+          .then((result) => sendResponse({ result }))
+          .catch((err) => sendResponse({ error: (err as Error).message ?? String(err) }));
+        return true; // async response
+      }
     });
+  }
+
+  // ── Sampling (Primitive 4) ────────────────────────────────────────────────
+
+  /**
+   * Traite une demande requestSampling via Gemini et retourne le résultat.
+   */
+  private async handleSamplingRequest(requestId: string, params: SamplingRequest): Promise<SamplingResponse> {
+    this.setStatus('🧠 Sampling en cours…', 'working');
+    try {
+      const { apiKey, model } = await this.getSettings();
+      if (!apiKey) throw new Error("Clé API Gemini manquante.");
+
+      if (!this.genaiClient) this.genaiClient = new GoogleGenAI({ apiKey });
+
+      const userMessages = params.messages.map((m) => {
+        const text = typeof m.content === 'string' ? m.content : m.content.text;
+        return { role: m.role === 'user' ? 'user' : 'model', parts: [{ text }] };
+      });
+
+      const lastUser = userMessages.filter((m) => m.role === 'user').pop();
+      const messageText = lastUser?.parts[0]?.text ?? '';
+
+      const session = this.genaiClient.chats.create({
+        model,
+        config: {
+          systemInstruction: params.systemPrompt,
+          maxOutputTokens: params.maxTokens,
+        },
+        history: userMessages.slice(0, -1) as Parameters<GoogleGenAI['chats']['create']>[0]['history'],
+      });
+
+      const response = await session.sendMessage({ message: messageText });
+      const reply: SamplingResponse = {
+        role: 'assistant',
+        content: { type: 'text', text: response.text ?? '' },
+        model,
+        stopReason: 'endTurn',
+      };
+
+      this.setStatus(`✅ Sampling complété (${requestId.slice(0, 8)}…)`, 'ready');
+      return reply;
+    } catch (err) {
+      const errMsg = (err as Error).message ?? String(err);
+      this.setStatus(`❌ Erreur sampling : ${errMsg}`, 'error');
+      throw new Error(errMsg);
+    }
   }
 
   // ── Écouteurs formulaire ───────────────────────────────────────────────────
@@ -288,6 +437,28 @@ class SidePanelController {
       if (this.toggleToolsLabel) {
         this.toggleToolsLabel.textContent = isCollapsed ? 'Afficher' : 'Masquer';
       }
+    });
+  }
+
+  private bindToggleResourcesPanel(): void {
+    if (!this.toggleResourcesBtn || !this.resourcesPanelEl) return;
+    this.toggleResourcesBtn.addEventListener('click', () => {
+      const isCollapsed = this.resourcesPanelEl!.classList.toggle('collapsed');
+      this.toggleResourcesBtn!.classList.toggle('collapsed', isCollapsed);
+      this.toggleResourcesBtn!.setAttribute('aria-expanded', String(!isCollapsed));
+      const labelEl = this.toggleResourcesBtn!.querySelector('.toggle-label');
+      if (labelEl) labelEl.textContent = isCollapsed ? 'Afficher' : 'Masquer';
+    });
+  }
+
+  private bindTogglePromptsPanel(): void {
+    if (!this.togglePromptsBtn || !this.promptsPanelEl) return;
+    this.togglePromptsBtn.addEventListener('click', () => {
+      const isCollapsed = this.promptsPanelEl!.classList.toggle('collapsed');
+      this.togglePromptsBtn!.classList.toggle('collapsed', isCollapsed);
+      this.togglePromptsBtn!.setAttribute('aria-expanded', String(!isCollapsed));
+      const labelEl = this.togglePromptsBtn!.querySelector('.toggle-label');
+      if (labelEl) labelEl.textContent = isCollapsed ? 'Afficher' : 'Masquer';
     });
   }
 }

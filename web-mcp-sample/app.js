@@ -101,7 +101,12 @@ function incrementCallCount(toolName) {
 // ---------------------------------------------------------------------------
 if (!window.navigator.modelContext) {
   Object.defineProperty(window.navigator, 'modelContext', {
-    value: { registerTool: () => {} },
+    value: {
+      registerTool: () => {},
+      registerResource: () => {},
+      registerPrompt: () => {},
+      requestSampling: () => Promise.resolve({ role: 'assistant', content: { type: 'text', text: '' } }),
+    },
     writable: false,
     configurable: true,
   });
@@ -295,15 +300,86 @@ function registerAllTools() {
       return { success: true, userId, oldStatus, newStatus: status };
     },
   });
-}
 
-// Écoute du signal inject.js prêt
-window.addEventListener('MCP_INJECT_READY', () => {
-  console.log('[MCP sample] MCP_INJECT_READY reçu — enregistrement des outils.');
-  registerAllTools();
-});
+  // ── Resources (Primitive 2) ───────────────────────────────────────────────
 
-// Fallback : si l'extension n'est pas là, on enregistre quand même après 3 s
+  window.navigator.modelContext.registerResource({
+    name: 'user_context',
+    description: 'Contexte utilisateur courant : liste complète des utilisateurs du portail.',
+    mimeType: 'application/json',
+    read: async () => ({
+      content: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        users: MOCK_USERS,
+        totalUsers: MOCK_USERS.length,
+        activeCount: MOCK_USERS.filter(u => u.status === 'active').length,
+      }),
+    }),
+  });
+  logActivity('info', 'user_context', { status: 'Ressource enregistrée' });
+
+  window.navigator.modelContext.registerResource({
+    name: 'dashboard_snapshot',
+    description: 'Instantané des statistiques du tableau de bord au moment de la lecture.',
+    mimeType: 'application/json',
+    read: async () => ({
+      content: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        stats: DASHBOARD_STATS,
+        recentDocuments: MOCK_DOCUMENTS.slice(0, 3),
+        unreadNotifications: MOCK_NOTIFICATIONS.filter(n => !n.read).length,
+      }),
+    }),
+  });
+  logActivity('info', 'dashboard_snapshot', { status: 'Ressource enregistrée' });
+
+  // ── Prompts (Primitive 3) ─────────────────────────────────────────────────
+
+  window.navigator.modelContext.registerPrompt({
+    name: 'analyze_user',
+    description: 'Génère un prompt d\'analyse pour un utilisateur spécifique.',
+    arguments: [
+      { name: 'userId', description: 'Identifiant de l\'utilisateur', required: true },
+    ],
+    get: async ({ userId = 'u1' } = {}) => {
+      const user = MOCK_USERS.find(u => u.id === userId) || MOCK_USERS[0];
+      return {
+        messages: [
+          {
+            role: 'user',
+            content: {
+              type: 'text',
+              text: `Analyse le profil de l'utilisateur suivant et fournis un résumé de son activité et de son rôle dans l'organisation.\n\nProfil : ${JSON.stringify(user, null, 2)}`,
+            },
+          },
+        ],
+      };
+    },
+  });
+  logActivity('info', 'analyze_user', { status: 'Prompt enregistré' });
+
+  window.navigator.modelContext.registerPrompt({
+    name: 'generate_report',
+    description: 'Génère un prompt pour produire un rapport de synthèse du portail.',
+    arguments: [
+      { name: 'period', description: 'Période du rapport (ex: Q1 2026)', required: false },
+    ],
+    get: async ({ period = 'Q1 2026' } = {}) => ({
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Génère un rapport de synthèse pour la période ${period} à partir des données suivantes :\n\n` +
+              `Statistiques : ${JSON.stringify(DASHBOARD_STATS)}\n` +
+              `Utilisateurs actifs : ${MOCK_USERS.filter(u => u.status === 'active').length}/${MOCK_USERS.length}\n` +
+              `Documents récents : ${MOCK_DOCUMENTS.slice(0, 3).map(d => d.title).join(', ')}`,
+          },
+        },
+      ],
+    }),
+  });
+  logActivity('info', 'generate_report', { status: 'Prompt enregistré' });
 setTimeout(() => {
   if (!mcpReady) {
     console.warn('[MCP sample] MCP_INJECT_READY jamais reçu — fallback sans extension.');

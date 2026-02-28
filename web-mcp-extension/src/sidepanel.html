@@ -408,6 +408,46 @@
         </div>
       </section>
 
+      <!-- Barre titre — Resources -->
+      <div class="tools-panel-header">
+        <span class="tools-label">
+          📦 Ressources détectées
+          <span id="resources-count-badge" class="tools-count-badge">0</span>
+        </span>
+        <button id="toggle-resources-btn" aria-expanded="true" aria-controls="resources-panel">
+          <span class="toggle-icon">▼</span>
+          <span class="toggle-label">Masquer</span>
+        </button>
+      </div>
+
+      <!-- Panneau des ressources (collapsible) -->
+      <section id="resources-panel" class="tools-panel" aria-label="Ressources détectées">
+        <div class="tools-panel-inner">
+          <ul id="resources-list"></ul>
+          <p id="no-resources-msg">Aucune ressource détectée.</p>
+        </div>
+      </section>
+
+      <!-- Barre titre — Prompts -->
+      <div class="tools-panel-header">
+        <span class="tools-label">
+          💬 Prompts détectés
+          <span id="prompts-count-badge" class="tools-count-badge">0</span>
+        </span>
+        <button id="toggle-prompts-btn" aria-expanded="true" aria-controls="prompts-panel">
+          <span class="toggle-icon">▼</span>
+          <span class="toggle-label">Masquer</span>
+        </button>
+      </div>
+
+      <!-- Panneau des prompts (collapsible) -->
+      <section id="prompts-panel" class="tools-panel" aria-label="Prompts détectés">
+        <div class="tools-panel-inner">
+          <ul id="prompts-list"></ul>
+          <p id="no-prompts-msg">Aucun prompt détecté.</p>
+        </div>
+      </section>
+
       <!-- Barre de statut -->
       <div id="status-bar" class="status-bar" role="status">
         En attente de la détection d'outils sur la page…

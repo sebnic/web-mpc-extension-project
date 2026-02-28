@@ -11,7 +11,7 @@
  */
 
 // import type est effacé à la compilation : aucune dépendance runtime.
-import type { McpToolConfig } from './types';
+import type { McpToolConfig, McpResourceConfig, McpPromptConfig, SamplingRequest, SamplingResponse } from './types';
 
 /**
  * ModelContextPatcher crée ou complète navigator.modelContext et remplace
@@ -75,6 +75,9 @@ class ModelContextPatcher {
     } catch (e) {
       console.error('[MCP ModelContextPatcher] ❌ Impossible de patcher registerTool :', e);
     }
+    this.patchRegisterResource();
+    this.patchRegisterPrompt();
+    this.patchRequestSampling();
   }
 
   /**
@@ -106,6 +109,184 @@ class ModelContextPatcher {
       } catch (e) {
         console.warn('[MCP ModelContextPatcher] Appel natif ignoré :', (e as Error).message);
       }
+    }
+  }
+
+  // ── Primitive 2 — registerResource ────────────────────────────────────────
+
+  /**
+   * Instrumente registerResource() pour émettre MCP_RESOURCE_DISCOVERED.
+   * Le callback `read()` est conservé dans une Map afin que content.ts
+   * puisse déclencher la lecture via READ_RESOURCE_ON_PAGE.
+   */
+  private patchRegisterResource(): void {
+    const resourceHandlers = new Map<string, () => Promise<{ content: string }>>();
+
+    // Expose la Map pour que l'event handler puisse l'atteindre
+    (window as any).__MCP_RESOURCE_HANDLERS = resourceHandlers;
+
+    try {
+      Object.defineProperty(this.mc, 'registerResource', {
+        value: (config: McpResourceConfig) => {
+          if (!config?.name) {
+            console.warn('[MCP ModelContextPatcher] registerResource: config invalide.', config);
+            return;
+          }
+          console.log('[MCP ModelContextPatcher] registerResource intercepté :', config.name);
+          resourceHandlers.set(config.name, config.read);
+          window.dispatchEvent(
+            new CustomEvent('MCP_RESOURCE_DISCOVERED', {
+              detail: {
+                name: config.name,
+                description: config.description ?? '',
+                mimeType: config.mimeType,
+              },
+            }),
+          );
+        },
+        writable: true,
+        configurable: true,
+      });
+      console.log('[MCP ModelContextPatcher] ✅ registerResource patché.');
+    } catch (e) {
+      console.error('[MCP ModelContextPatcher] ❌ Impossible de patcher registerResource :', e);
+    }
+
+    // Écoute les demandes de lecture venant de content.ts
+    window.addEventListener('READ_RESOURCE_ON_PAGE', async (event: Event) => {
+      const { resourceName, callId } = (event as CustomEvent<{ resourceName: string; callId: string }>).detail;
+      const handler = resourceHandlers.get(resourceName);
+      if (!handler) {
+        window.dispatchEvent(new CustomEvent('READ_RESOURCE_RESULT', {
+          detail: { callId, error: `Ressource inconnue : ${resourceName}` },
+        }));
+        return;
+      }
+      try {
+        const result = await handler();
+        window.dispatchEvent(new CustomEvent('READ_RESOURCE_RESULT', { detail: { callId, result } }));
+      } catch (e) {
+        window.dispatchEvent(new CustomEvent('READ_RESOURCE_RESULT', {
+          detail: { callId, error: String(e) },
+        }));
+      }
+    });
+  }
+
+  // ── Primitive 3 — registerPrompt ──────────────────────────────────────────
+
+  /**
+   * Instrumente registerPrompt() pour émettre MCP_PROMPT_DISCOVERED.
+   * Le callback `get()` est stocké pour être rappelé via GET_PROMPT_ON_PAGE.
+   */
+  private patchRegisterPrompt(): void {
+    const promptHandlers = new Map<string, (args: Record<string, string>) => Promise<{ messages: unknown[] }>>();
+    (window as any).__MCP_PROMPT_HANDLERS = promptHandlers;
+
+    try {
+      Object.defineProperty(this.mc, 'registerPrompt', {
+        value: (config: McpPromptConfig) => {
+          if (!config?.name) {
+            console.warn('[MCP ModelContextPatcher] registerPrompt: config invalide.', config);
+            return;
+          }
+          console.log('[MCP ModelContextPatcher] registerPrompt intercepté :', config.name);
+          promptHandlers.set(config.name, config.get);
+          window.dispatchEvent(
+            new CustomEvent('MCP_PROMPT_DISCOVERED', {
+              detail: {
+                name: config.name,
+                description: config.description ?? '',
+                arguments: config.arguments ?? [],
+              },
+            }),
+          );
+        },
+        writable: true,
+        configurable: true,
+      });
+      console.log('[MCP ModelContextPatcher] ✅ registerPrompt patché.');
+    } catch (e) {
+      console.error('[MCP ModelContextPatcher] ❌ Impossible de patcher registerPrompt :', e);
+    }
+
+    // Écoute les demandes d'invocation de prompt
+    window.addEventListener('GET_PROMPT_ON_PAGE', async (event: Event) => {
+      const { promptName, promptArgs, callId } = (event as CustomEvent<{
+        promptName: string;
+        promptArgs: Record<string, string>;
+        callId: string;
+      }>).detail;
+      const handler = promptHandlers.get(promptName);
+      if (!handler) {
+        window.dispatchEvent(new CustomEvent('GET_PROMPT_RESULT', {
+          detail: { callId, error: `Prompt inconnu : ${promptName}` },
+        }));
+        return;
+      }
+      try {
+        const result = await handler(promptArgs ?? {});
+        window.dispatchEvent(new CustomEvent('GET_PROMPT_RESULT', { detail: { callId, result } }));
+      } catch (e) {
+        window.dispatchEvent(new CustomEvent('GET_PROMPT_RESULT', {
+          detail: { callId, error: String(e) },
+        }));
+      }
+    });
+  }
+
+  // ── Primitive 4 — requestSampling ─────────────────────────────────────────
+
+  /**
+   * Instrumente requestSampling() : retourne une Promise que l'extension
+   * résoudra après avoir interrogé Gemini dans le Side Panel.
+   */
+  private patchRequestSampling(): void {
+    try {
+      Object.defineProperty(this.mc, 'requestSampling', {
+        value: (params: SamplingRequest): Promise<unknown> => {
+          const requestId = ([1e7].toString() + -1e3 + -4e3 + -8e3 + -1e11).replace(
+            /[018]/g,
+            (c: string) => (Number(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (Number(c) / 4)))).toString(16),
+          );
+          console.log('[MCP ModelContextPatcher] requestSampling intercepté, id =', requestId);
+
+          return new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(() => {
+              cleanup();
+              reject(new Error('requestSampling timeout (30s)'));
+            }, 30_000);
+
+            const handler = (event: Event) => {
+              const detail = (event as CustomEvent<{ requestId: string; result?: unknown; error?: string }>).detail;
+              if (detail?.requestId !== requestId) return;
+              cleanup();
+              if (detail.error) {
+                reject(new Error(detail.error));
+              } else {
+                resolve(detail.result);
+              }
+            };
+
+            const cleanup = () => {
+              clearTimeout(timeoutId);
+              window.removeEventListener('MCP_SAMPLING_RESULT', handler);
+            };
+
+            window.addEventListener('MCP_SAMPLING_RESULT', handler);
+            window.dispatchEvent(
+              new CustomEvent('MCP_SAMPLING_REQUEST', {
+                detail: { requestId, params },
+              }),
+            );
+          });
+        },
+        writable: true,
+        configurable: true,
+      });
+      console.log('[MCP ModelContextPatcher] ✅ requestSampling patché.');
+    } catch (e) {
+      console.error('[MCP ModelContextPatcher] ❌ Impossible de patcher requestSampling :', e);
     }
   }
 

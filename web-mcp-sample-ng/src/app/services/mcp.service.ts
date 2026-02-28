@@ -80,7 +80,12 @@ export class McpService implements OnDestroy {
   private ensureModelContext(): void {
     if (!window.navigator.modelContext) {
       Object.defineProperty(window.navigator, 'modelContext', {
-        value: { registerTool: () => {} },
+        value: {
+          registerTool: () => {},
+          registerResource: () => {},
+          registerPrompt: () => {},
+          requestSampling: () => Promise.resolve({ role: 'assistant', content: { type: 'text', text: '' } }),
+        },
         writable: false,
         configurable: true,
       });
@@ -209,6 +214,80 @@ export class McpService implements OnDestroy {
         return { success: true, userId, oldStatus: result.oldStatus, newStatus: status };
       },
     });
+
+    // ── Resource 1 : user_context ───────────────────────────────────────────
+    const mc = window.navigator.modelContext as {
+      registerResource: (c: unknown) => void;
+      registerPrompt: (c: unknown) => void;
+    };
+
+    mc.registerResource({
+      name: 'user_context',
+      description: 'Contexte utilisateur courant : liste complète des utilisateurs du portail.',
+      mimeType: 'application/json',
+      read: async () => ({
+        content: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          users: this.userService.getAll(),
+          totalUsers: this.userService.getAll().length,
+          activeCount: this.userService.getAll().filter((u: { status: string }) => u.status === 'active').length,
+        }),
+      }),
+    });
+    this.activityLog.log('info', { status: 'Ressource enregistrée' }, 'user_context');
+
+    // ── Resource 2 : dashboard_snapshot ─────────────────────────────────────
+    mc.registerResource({
+      name: 'dashboard_snapshot',
+      description: 'Instantané des statistiques du tableau de bord au moment de la lecture.',
+      mimeType: 'application/json',
+      read: async () => ({
+        content: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          stats: this.dashboardService.getByMetrics([]),
+        }),
+      }),
+    });
+    this.activityLog.log('info', { status: 'Ressource enregistrée' }, 'dashboard_snapshot');
+
+    // ── Prompt 1 : analyze_user ──────────────────────────────────────────────
+    mc.registerPrompt({
+      name: 'analyze_user',
+      description: 'Génère un prompt d\'analyse pour un utilisateur spécifique.',
+      arguments: [
+        { name: 'userId', description: 'Identifiant de l\'utilisateur', required: true },
+      ],
+      get: async ({ userId = 'u1' }: Record<string, string> = {}) => {
+        const user = this.userService.findById(userId) ?? this.userService.getAll()[0];
+        return {
+          messages: [{
+            role: 'user',
+            content: { type: 'text', text: `Analyse le profil suivant :\n${JSON.stringify(user, null, 2)}` },
+          }],
+        };
+      },
+    });
+    this.activityLog.log('info', { status: 'Prompt enregistré' }, 'analyze_user');
+
+    // ── Prompt 2 : generate_report ───────────────────────────────────────────
+    mc.registerPrompt({
+      name: 'generate_report',
+      description: 'Génère un prompt pour produire un rapport de synthèse du portail.',
+      arguments: [
+        { name: 'period', description: 'Période du rapport (ex: Q1 2026)', required: false },
+      ],
+      get: async ({ period = 'Q1 2026' }: Record<string, string> = {}) => ({
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Génère un rapport de synthèse pour la période ${period}.\n` +
+              `Stats : ${JSON.stringify(this.dashboardService.getByMetrics([]))}.`,
+          },
+        }],
+      }),
+    });
+    this.activityLog.log('info', { status: 'Prompt enregistré' }, 'generate_report');
   }
 
   // ---------------------------------------------------------------------------
