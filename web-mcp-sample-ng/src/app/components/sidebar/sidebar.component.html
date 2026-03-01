@@ -5,15 +5,20 @@
       <div
         *ngFor="let item of navItems"
         class="nav-item"
-        [class.active]="item.active">
+        [class.active]="item.view === activeView"
+        [class.disabled]="!item.view"
+        (click)="navigate(item.view)">
         <span class="icon">{{ item.icon }}</span> {{ item.label }}
       </div>
     </nav>
   </section>
 
   <section>
-    <h3>Outils MCP exposés</h3>
-    <ul class="tool-badge-list">
+    <h3 class="section-toggle" (click)="toggleTools()">
+      <span>Outils MCP exposés</span>
+      <span class="chevron" [class.collapsed]="!toolsVisible">▾</span>
+    </h3>
+    <ul class="tool-badge-list" *ngIf="toolsVisible">
       <li *ngFor="let tool of (tools$ | async)" class="tool-badge-item">
         <div class="tool-status"></div>
         <span class="tool-name">{{ tool.name }}</span>

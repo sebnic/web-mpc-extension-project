@@ -1,0 +1,3759 @@
+[
+  {
+    "id": 0,
+    "section": "Introduction",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 1847
+  },
+  {
+    "id": 1,
+    "section": "MQTT / WS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 2359
+  },
+  {
+    "id": 2,
+    "section": "HTTPS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 334
+  },
+  {
+    "id": 3,
+    "section": "HTTPS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 127
+  },
+  {
+    "id": 4,
+    "section": "HTTPS",
+    "categories": [
+      "connection",
+      "device",
+      "data"
+    ],
+    "length": 157
+  },
+  {
+    "id": 5,
+    "section": "MQTT/S",
+    "categories": [
+      "connection",
+      "device"
+    ],
+    "length": 156
+  },
+  {
+    "id": 6,
+    "section": "HTTPS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data"
+    ],
+    "length": 203
+  },
+  {
+    "id": 7,
+    "section": "REST API",
+    "categories": [
+      "connection",
+      "audit",
+      "api"
+    ],
+    "length": 214
+  },
+  {
+    "id": 8,
+    "section": "MQTT/S",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 18622
+  },
+  {
+    "id": 9,
+    "section": "GET /api/v0/data/streams/urn:lo:nsid:dongle:00-14-22-01-23-45!temperature",
+    "categories": [
+      "connection",
+      "device",
+      "data"
+    ],
+    "length": 128
+  },
+  {
+    "id": 10,
+    "section": "GET /api/v0/data/streams/urn:lo:nsid:lora:<DevEUI>",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4318
+  },
+  {
+    "id": 11,
+    "section": "MQTT/S",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 12174
+  },
+  {
+    "id": 12,
+    "section": "MQTT/S",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3023
+  },
+  {
+    "id": 13,
+    "section": "INITIALIZED",
+    "categories": [
+      "device",
+      "data"
+    ],
+    "length": 148
+  },
+  {
+    "id": 14,
+    "section": "DEACTIVATED",
+    "categories": [
+      "device"
+    ],
+    "length": 200
+  },
+  {
+    "id": 15,
+    "section": "REACTIVATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 534
+  },
+  {
+    "id": 16,
+    "section": "SLEEPING",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command"
+    ],
+    "length": 1414
+  },
+  {
+    "id": 17,
+    "section": "POST /api/v1/deviceMgt/devices/<myDeviceId>",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 409
+  },
+  {
+    "id": 18,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1625
+  },
+  {
+    "id": 19,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 261
+  },
+  {
+    "id": 20,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 998
+  },
+  {
+    "id": 21,
+    "section": "GET /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2628
+  },
+  {
+    "id": 22,
+    "section": "GET /api/v1/deviceMgt/devices?name=mySensor*&sort=-id&fields=name,created,group",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 485
+  },
+  {
+    "id": 23,
+    "section": "200 OK",
+    "categories": [
+      "device",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1291
+  },
+  {
+    "id": 24,
+    "section": "GET /api/v1/deviceMgt/devices/urn:lo:nsid:mqtt:myTest",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2048
+  },
+  {
+    "id": 25,
+    "section": "204 NO CONTENT",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 254
+  },
+  {
+    "id": 26,
+    "section": "POST /api/v1/deviceMgt/devices/<deviceId>/interfaces",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1177
+  },
+  {
+    "id": 27,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/interfaces",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 111
+  },
+  {
+    "id": 28,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 929
+  },
+  {
+    "id": 29,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2418
+  },
+  {
+    "id": 30,
+    "section": "GET /api/v1/deviceMgt/devices/<deviceId>/interfaces/<interfaceId>",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 145
+  },
+  {
+    "id": 31,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1594
+  },
+  {
+    "id": 32,
+    "section": "PATCH /api/v1/deviceMgt/devices/<deviceId>/interfaces/<interfaceId>",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 358
+  },
+  {
+    "id": 33,
+    "section": "PATCH /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/interfaces/sms:33601201201",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 136
+  },
+  {
+    "id": 34,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 744
+  },
+  {
+    "id": 35,
+    "section": "DELETE /api/v1/deviceMgt/devices/<deviceId>/interfaces/<interfaceId>",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 145
+  },
+  {
+    "id": 36,
+    "section": "204 NO CONTENT",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5430
+  },
+  {
+    "id": 37,
+    "section": "DEACTIVATED",
+    "categories": [
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 342
+  },
+  {
+    "id": 38,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 624
+  },
+  {
+    "id": 39,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1637
+  },
+  {
+    "id": 40,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/interfaces",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 343
+  },
+  {
+    "id": 41,
+    "section": "201 CREATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 670
+  },
+  {
+    "id": 42,
+    "section": "GET /api/v1/deviceMgt/connectors/lora/connectivities",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 95
+  },
+  {
+    "id": 43,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 910
+  },
+  {
+    "id": 44,
+    "section": "GET /api/v1/deviceMgt/connectors/lora/profiles",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 780
+  },
+  {
+    "id": 45,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 2360
+  },
+  {
+    "id": 46,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1076
+  },
+  {
+    "id": 47,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 733
+  },
+  {
+    "id": 48,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/interfaces",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 123
+  },
+  {
+    "id": 49,
+    "section": "201 CREATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3136
+  },
+  {
+    "id": 50,
+    "section": "DEACTIVATED",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 312
+  },
+  {
+    "id": 51,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 368
+  },
+  {
+    "id": 52,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5880
+  },
+  {
+    "id": 53,
+    "section": "REGISTERED",
+    "categories": [
+      "connection",
+      "device"
+    ],
+    "length": 333
+  },
+  {
+    "id": 54,
+    "section": "SLEEPING",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 514
+  },
+  {
+    "id": 55,
+    "section": "DEACTIVATED",
+    "categories": [
+      "connection",
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 1056
+  },
+  {
+    "id": 56,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3453
+  },
+  {
+    "id": 57,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1165
+  },
+  {
+    "id": 58,
+    "section": "GET /api/v1/deviceMgt/devices/my_device_id/interfaces",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1490
+  },
+  {
+    "id": 59,
+    "section": "MQTTS",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 822
+  },
+  {
+    "id": 60,
+    "section": "POST /api/v1/deviceMgt/devices",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2668
+  },
+  {
+    "id": 61,
+    "section": "OFFLINE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 6098
+  },
+  {
+    "id": 62,
+    "section": "MQTTS",
+    "categories": [
+      "connection",
+      "device"
+    ],
+    "length": 300
+  },
+  {
+    "id": 63,
+    "section": "MQTTS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2222
+  },
+  {
+    "id": 64,
+    "section": "MQTTS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 4212
+  },
+  {
+    "id": 65,
+    "section": "FALSE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 2544
+  },
+  {
+    "id": 66,
+    "section": "POST /api/v0/certificates/ca",
+    "categories": [
+      "connection",
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 477
+  },
+  {
+    "id": 67,
+    "section": "POST /api/v0/apiKeys/{your-api-key-id}",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 21038
+  },
+  {
+    "id": 68,
+    "section": "PROCESSED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 16038
+  },
+  {
+    "id": 69,
+    "section": "PROCESSED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 16038
+  },
+  {
+    "id": 70,
+    "section": "OSCORE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 1540
+  },
+  {
+    "id": 71,
+    "section": "HTTPS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4005
+  },
+  {
+    "id": 72,
+    "section": "TLVN/A",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 35352
+  },
+  {
+    "id": 73,
+    "section": "POST /api/v1/bootstrap/lwm2m/confi gs",
+    "categories": [
+      "general"
+    ],
+    "length": 184
+  },
+  {
+    "id": 74,
+    "section": "POST /api/v1/bootstrap/lwm2m/entries",
+    "categories": [
+      "connection",
+      "api"
+    ],
+    "length": 83
+  },
+  {
+    "id": 75,
+    "section": "4.00 Bad Request",
+    "categories": [
+      "command",
+      "api"
+    ],
+    "length": 261
+  },
+  {
+    "id": 76,
+    "section": "2.02 Deleted",
+    "categories": [
+      "general"
+    ],
+    "length": 203
+  },
+  {
+    "id": 77,
+    "section": "2.04 Changed",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 975
+  },
+  {
+    "id": 78,
+    "section": "FAILED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 2124
+  },
+  {
+    "id": 79,
+    "section": "POST /api/v1/bootstrap/lwm2m/confi gs",
+    "categories": [
+      "general"
+    ],
+    "length": 97
+  },
+  {
+    "id": 80,
+    "section": "POST /api/v1/bootstrap/lwm2m/entries",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 177
+  },
+  {
+    "id": 81,
+    "section": "POST /bs?ep={Endpoint Client Name}&pct={Preferred Content Format}",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 337
+  },
+  {
+    "id": 82,
+    "section": "2.04 Changed",
+    "categories": [
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 1291
+  },
+  {
+    "id": 83,
+    "section": "POST /api/v1/bootstrap/lwm2m/confi gs",
+    "categories": [
+      "general"
+    ],
+    "length": 121
+  },
+  {
+    "id": 84,
+    "section": "POST /api/v1/bootstrap/lwm2m/entries",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 170
+  },
+  {
+    "id": 85,
+    "section": "POST /bs?ep={Endpoint Client Name}&pct={Preferred Content Format}",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 99
+  },
+  {
+    "id": 86,
+    "section": "2.04 Changed",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1909
+  },
+  {
+    "id": 87,
+    "section": "POST /api/v1/bootstrap/lwm2m/confi gs",
+    "categories": [
+      "general"
+    ],
+    "length": 99
+  },
+  {
+    "id": 88,
+    "section": "POST /api/v1/bootstrap/lwm2m/masterEntries",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 499
+  },
+  {
+    "id": 89,
+    "section": "POST /bs?ep={Endpoint Client Name}&pct={Preferred Content Format}",
+    "categories": [
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 215
+  },
+  {
+    "id": 90,
+    "section": "2.04 Changed",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 373
+  },
+  {
+    "id": 91,
+    "section": "POST /api/v1/bootstrap/lwm2m/configs",
+    "categories": [
+      "api"
+    ],
+    "length": 350
+  },
+  {
+    "id": 92,
+    "section": "201 CREATED",
+    "categories": [
+      "command"
+    ],
+    "length": 618
+  },
+  {
+    "id": 93,
+    "section": "POST /api/v1/bootstrap/lwm2m/configs",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 998
+  },
+  {
+    "id": 94,
+    "section": "201 CREATED",
+    "categories": [
+      "device",
+      "command"
+    ],
+    "length": 891
+  },
+  {
+    "id": 95,
+    "section": "POST /api/v1/bootstrap/lwm2m/configs",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 368
+  },
+  {
+    "id": 96,
+    "section": "201 CREATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1377
+  },
+  {
+    "id": 97,
+    "section": "POST /api/v1/bootstrap/lwm2m/entries",
+    "categories": [
+      "api"
+    ],
+    "length": 372
+  },
+  {
+    "id": 98,
+    "section": "201 CREATED",
+    "categories": [
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 534
+  },
+  {
+    "id": 99,
+    "section": "200 OK",
+    "categories": [
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 506
+  },
+  {
+    "id": 100,
+    "section": "GET /api/v1/bootstrap/lwm2m/entries/my_endpoint?showSecuritySecrets=true",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 693
+  },
+  {
+    "id": 101,
+    "section": "200 OK",
+    "categories": [
+      "audit",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1135
+  },
+  {
+    "id": 102,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3082
+  },
+  {
+    "id": 103,
+    "section": "POST /api/v1/bootstrap/lwm2m/masterEntries",
+    "categories": [
+      "api"
+    ],
+    "length": 136
+  },
+  {
+    "id": 104,
+    "section": "201 CREATED",
+    "categories": [
+      "command"
+    ],
+    "length": 393
+  },
+  {
+    "id": 105,
+    "section": "PUT /api/v1/bootstrap/lwm2m/masterEntries/Kl77BbLBwh/definition/bootstrapConfigId",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 720
+  },
+  {
+    "id": 106,
+    "section": "200 OK",
+    "categories": [
+      "command"
+    ],
+    "length": 366
+  },
+  {
+    "id": 107,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 8410
+  },
+  {
+    "id": 108,
+    "section": "WRITE",
+    "categories": [
+      "general"
+    ],
+    "length": 290
+  },
+  {
+    "id": 109,
+    "section": "EXECUTE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 6086
+  },
+  {
+    "id": 110,
+    "section": "GET /api/v1/deviceMgt/twin/model/object-definitions/{objectDefinitionId}",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 130
+  },
+  {
+    "id": 111,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1389
+  },
+  {
+    "id": 112,
+    "section": "POST /api/v1/deviceMgt/twin/model/object-definitions?inputFormat=lwm2m&override=true",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 187
+  },
+  {
+    "id": 113,
+    "section": "201 Created",
+    "categories": [
+      "api"
+    ],
+    "length": 511
+  },
+  {
+    "id": 114,
+    "section": "DELETE /api/v1/deviceMgt/twin/model/object-definitions/{objectDefinitionId}",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 152
+  },
+  {
+    "id": 115,
+    "section": "204 No content :imagesDir: lo_manual_v2/lwm2m_main/lwm2m_twin/images",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2946
+  },
+  {
+    "id": 116,
+    "section": "200 OK",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 313
+  },
+  {
+    "id": 117,
+    "section": "GET /api/v1/deviceMgt/devices/{deviceId}/twin/objects",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 199
+  },
+  {
+    "id": 118,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1522
+  },
+  {
+    "id": 119,
+    "section": "GET /api/v1/deviceMgt/devices/{deviceId}/twin/objects/{objectId}",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 216
+  },
+  {
+    "id": 120,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1622
+  },
+  {
+    "id": 121,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5783
+  },
+  {
+    "id": 122,
+    "section": "WRITE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 971
+  },
+  {
+    "id": 123,
+    "section": "WRITE",
+    "categories": [
+      "data",
+      "command"
+    ],
+    "length": 214
+  },
+  {
+    "id": 124,
+    "section": "WRITE",
+    "categories": [
+      "data",
+      "command"
+    ],
+    "length": 306
+  },
+  {
+    "id": 125,
+    "section": "WRITE",
+    "categories": [
+      "data"
+    ],
+    "length": 403
+  },
+  {
+    "id": 126,
+    "section": "WRITE",
+    "categories": [
+      "data",
+      "command"
+    ],
+    "length": 329
+  },
+  {
+    "id": 127,
+    "section": "WRITE",
+    "categories": [
+      "data",
+      "command"
+    ],
+    "length": 1176
+  },
+  {
+    "id": 128,
+    "section": "EXECUTE",
+    "categories": [
+      "data"
+    ],
+    "length": 166
+  },
+  {
+    "id": 129,
+    "section": "WRITE-METADATA",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 1453
+  },
+  {
+    "id": 130,
+    "section": "POST /api/v1/deviceMgt/devices/{deviceId}/twin/operations",
+    "categories": [
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 606
+  },
+  {
+    "id": 131,
+    "section": "FAILED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3788
+  },
+  {
+    "id": 132,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:lwm2m:mydevice/twin/operations",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 86
+  },
+  {
+    "id": 133,
+    "section": "201 CREATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "command"
+    ],
+    "length": 371
+  },
+  {
+    "id": 134,
+    "section": "200 OK",
+    "categories": [
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 140
+  },
+  {
+    "id": 135,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 832
+  },
+  {
+    "id": 136,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3206
+  },
+  {
+    "id": 137,
+    "section": "POST /api/v1/deviceMgt/devices/{deviceId}/twin/observations",
+    "categories": [
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 336
+  },
+  {
+    "id": 138,
+    "section": "GET /api/v1/deviceMgt/devices/{deviceId}/twin/observations/{observationId}",
+    "categories": [
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 119
+  },
+  {
+    "id": 139,
+    "section": "GET /api/v1/deviceMgt/devices/{deviceId}/twin/observations/{observationId}",
+    "categories": [
+      "device",
+      "audit",
+      "command"
+    ],
+    "length": 172
+  },
+  {
+    "id": 140,
+    "section": "GET /api/v1/deviceMgt/devices/{deviceId}/twin/observations/{observationId}",
+    "categories": [
+      "device",
+      "audit"
+    ],
+    "length": 116
+  },
+  {
+    "id": 141,
+    "section": "DELETE /api/v1/deviceMgt/devices/{deviceId}/twin/observations/{observationId}",
+    "categories": [
+      "device",
+      "audit"
+    ],
+    "length": 136
+  },
+  {
+    "id": 142,
+    "section": "FAILED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2003
+  },
+  {
+    "id": 143,
+    "section": "201 CREATED",
+    "categories": [
+      "audit"
+    ],
+    "length": 266
+  },
+  {
+    "id": 144,
+    "section": "204 NO CONTENT",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 154
+  },
+  {
+    "id": 145,
+    "section": "200 OK",
+    "categories": [
+      "audit"
+    ],
+    "length": 316
+  },
+  {
+    "id": 146,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 8297
+  },
+  {
+    "id": 147,
+    "section": "POST /api/v1/deviceMgt/groups",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1028
+  },
+  {
+    "id": 148,
+    "section": "POST /api/v1/deviceMgt/groups",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 101
+  },
+  {
+    "id": 149,
+    "section": "201 CREATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 637
+  },
+  {
+    "id": 150,
+    "section": "PUT /api/v1/deviceMgt/groups/<id>",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 345
+  },
+  {
+    "id": 151,
+    "section": "PUT /api/v1/deviceMgt/groups/u1z1k8",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 103
+  },
+  {
+    "id": 152,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1203
+  },
+  {
+    "id": 153,
+    "section": "GET /api/v1/deviceMgt/groups",
+    "categories": [
+      "connection",
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 1267
+  },
+  {
+    "id": 154,
+    "section": "200 OK",
+    "categories": [
+      "command",
+      "api"
+    ],
+    "length": 575
+  },
+  {
+    "id": 155,
+    "section": "GET /api/v1/deviceMgt/groups/<id>",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 758
+  },
+  {
+    "id": 156,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 405
+  },
+  {
+    "id": 157,
+    "section": "204 NO CONTENT",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 820
+  },
+  {
+    "id": 158,
+    "section": "OPTIONAL",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1099
+  },
+  {
+    "id": 159,
+    "section": "FAILED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 725
+  },
+  {
+    "id": 160,
+    "section": "OKFAILED",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 555
+  },
+  {
+    "id": 161,
+    "section": "GET /api/v1/deviceMgt/devices/<deviceId>/config/parameters",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 104
+  },
+  {
+    "id": 162,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2588
+  },
+  {
+    "id": 163,
+    "section": "POST /api/v1/deviceMgt/devices/<deviceId>/config",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 835
+  },
+  {
+    "id": 164,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/config",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 207
+  },
+  {
+    "id": 165,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 935
+  },
+  {
+    "id": 166,
+    "section": "GET /api/v1/deviceMgt/devices/<deviceId>/config",
+    "categories": [
+      "connection",
+      "device",
+      "api"
+    ],
+    "length": 104
+  },
+  {
+    "id": 167,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1790
+  },
+  {
+    "id": 168,
+    "section": "GET /api/v1/deviceMgt/devices/<deviceId>/config/parameters/<paramKey>",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 789
+  },
+  {
+    "id": 169,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1828
+  },
+  {
+    "id": 170,
+    "section": "PENDING",
+    "categories": [
+      "audit",
+      "command"
+    ],
+    "length": 145
+  },
+  {
+    "id": 171,
+    "section": "PROCESSING",
+    "categories": [
+      "device",
+      "audit",
+      "command"
+    ],
+    "length": 499
+  },
+  {
+    "id": 172,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1545
+  },
+  {
+    "id": 173,
+    "section": "SENDING",
+    "categories": [
+      "connection",
+      "device",
+      "command"
+    ],
+    "length": 91
+  },
+  {
+    "id": 174,
+    "section": "DELIVERED",
+    "categories": [
+      "device",
+      "command"
+    ],
+    "length": 86
+  },
+  {
+    "id": 175,
+    "section": "REPLIED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 12892
+  },
+  {
+    "id": 176,
+    "section": "BINARY",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1214
+  },
+  {
+    "id": 177,
+    "section": "P R O C E S S E D",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 675
+  },
+  {
+    "id": 178,
+    "section": "SENTREPLIED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3421
+  },
+  {
+    "id": 179,
+    "section": "APPLICATIVE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5028
+  },
+  {
+    "id": 180,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:lora:watermeter123/commands",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3158
+  },
+  {
+    "id": 181,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sms:unlock123/commands",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 766
+  },
+  {
+    "id": 182,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sms:unlock123/commands",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 259
+  },
+  {
+    "id": 183,
+    "section": "BINARY",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 6100
+  },
+  {
+    "id": 184,
+    "section": "POST /api/v0/rm/X113DevFirmware",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1185
+  },
+  {
+    "id": 185,
+    "section": "POST /api/v0/rm/X113DevFirmware/version",
+    "categories": [
+      "command"
+    ],
+    "length": 1110
+  },
+  {
+    "id": 186,
+    "section": "DELETE /api/v0/rm/X113DevFirmware/version/1.0",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3791
+  },
+  {
+    "id": 187,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/resources/MyResource001",
+    "categories": [
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 518
+  },
+  {
+    "id": 188,
+    "section": "PUT /api/v0/rm/MyResource001",
+    "categories": [
+      "connection",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 385
+  },
+  {
+    "id": 189,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/resources/MyResource001",
+    "categories": [
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 341
+  },
+  {
+    "id": 190,
+    "section": "DELETE /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/resources/MyResource001/requested",
+    "categories": [
+      "device",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 322
+  },
+  {
+    "id": 191,
+    "section": "POST /api/v1/deviceMgt/devices/urn:lo:nsid:sensor:temp001/resources/MyResource001/updates",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2314
+  },
+  {
+    "id": 192,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1742
+  },
+  {
+    "id": 193,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4868
+  },
+  {
+    "id": 194,
+    "section": "PENDING",
+    "categories": [
+      "connection",
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 372
+  },
+  {
+    "id": 195,
+    "section": "E R R O R",
+    "categories": [
+      "device",
+      "audit",
+      "command"
+    ],
+    "length": 232
+  },
+  {
+    "id": 196,
+    "section": "E R R O R",
+    "categories": [
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 136
+  },
+  {
+    "id": 197,
+    "section": "E R R O R",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1934
+  },
+  {
+    "id": 198,
+    "section": "E R R O R",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2544
+  },
+  {
+    "id": 199,
+    "section": "PENDING",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 453
+  },
+  {
+    "id": 200,
+    "section": "E R R O R",
+    "categories": [
+      "device",
+      "audit",
+      "command"
+    ],
+    "length": 126
+  },
+  {
+    "id": 201,
+    "section": "E R R O R",
+    "categories": [
+      "command",
+      "api"
+    ],
+    "length": 194
+  },
+  {
+    "id": 202,
+    "section": "E R R O R",
+    "categories": [
+      "connection",
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 546
+  },
+  {
+    "id": 203,
+    "section": "E R R O R",
+    "categories": [
+      "audit",
+      "command"
+    ],
+    "length": 103
+  },
+  {
+    "id": 204,
+    "section": "E R R O R",
+    "categories": [
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 220
+  },
+  {
+    "id": 205,
+    "section": "E R R O R",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4430
+  },
+  {
+    "id": 206,
+    "section": "E R R O R",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4977
+  },
+  {
+    "id": 207,
+    "section": "CANCELEDCANCELED",
+    "categories": [
+      "general"
+    ],
+    "length": 103
+  },
+  {
+    "id": 208,
+    "section": "FAILEDFAILURE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1535
+  },
+  {
+    "id": 209,
+    "section": "PROCESSED",
+    "categories": [
+      "general"
+    ],
+    "length": 100
+  },
+  {
+    "id": 210,
+    "section": "UNKNOWNFAILURE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 2584
+  },
+  {
+    "id": 211,
+    "section": "CANCELEDCANCELED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4088
+  },
+  {
+    "id": 212,
+    "section": "PENDING",
+    "categories": [
+      "general"
+    ],
+    "length": 94
+  },
+  {
+    "id": 213,
+    "section": "FAILEDFAILURE",
+    "categories": [
+      "device",
+      "audit",
+      "command",
+      "api"
+    ],
+    "length": 845
+  },
+  {
+    "id": 214,
+    "section": "OBSERVING",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2965
+  },
+  {
+    "id": 215,
+    "section": "POST /api/v0/deviceMgt/campaigns",
+    "categories": [
+      "device",
+      "data",
+      "command"
+    ],
+    "length": 454
+  },
+  {
+    "id": 216,
+    "section": "POST /api/v0/deviceMgt/campaigns",
+    "categories": [
+      "device",
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 425
+  },
+  {
+    "id": 217,
+    "section": "POST /api/v0/deviceMgt/campaigns",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 1263
+  },
+  {
+    "id": 218,
+    "section": "INCOMPLETE",
+    "categories": [
+      "device",
+      "audit"
+    ],
+    "length": 161
+  },
+  {
+    "id": 219,
+    "section": "CANCELING",
+    "categories": [
+      "general"
+    ],
+    "length": 104
+  },
+  {
+    "id": 220,
+    "section": "CANCELED",
+    "categories": [
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 702
+  },
+  {
+    "id": 221,
+    "section": "PUT /api/v0/deviceMgt/campaigns/{campaignId}/cancel",
+    "categories": [
+      "device"
+    ],
+    "length": 280
+  },
+  {
+    "id": 222,
+    "section": "PUT /api/v0/deviceMgt/campaigns/{campaignId}/cancel",
+    "categories": [
+      "device",
+      "api"
+    ],
+    "length": 103
+  },
+  {
+    "id": 223,
+    "section": "DELETE /api/v0/deviceMgt/campaigns/{campaignId}",
+    "categories": [
+      "device"
+    ],
+    "length": 211
+  },
+  {
+    "id": 224,
+    "section": "DELETE /api/v0/deviceMgt/campaigns/{campaignId}",
+    "categories": [
+      "device",
+      "audit"
+    ],
+    "length": 225
+  },
+  {
+    "id": 225,
+    "section": "GET /api/v0/deviceMgt/campaigns/{campaignId}",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 2322
+  },
+  {
+    "id": 226,
+    "section": "GET /api/v0/deviceMgt/campaigns/{campaignId}/targets",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 14157
+  },
+  {
+    "id": 227,
+    "section": "POST /api/v1/deviceMgt/explorer/search",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2279
+  },
+  {
+    "id": 228,
+    "section": "POST /api/v1/deviceMgt/explorer/stats",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 25525
+  },
+  {
+    "id": 229,
+    "section": "POST /api/v1/deviceMgt/explorer/search",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 7433
+  },
+  {
+    "id": 230,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 847
+  },
+  {
+    "id": 231,
+    "section": "POST /api/v1/networks/cellular/subscriptions/search",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 637
+  },
+  {
+    "id": 232,
+    "section": "POST /api/v1/networks/cellular/subscriptions/search",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 766
+  },
+  {
+    "id": 233,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1182
+  },
+  {
+    "id": 234,
+    "section": "GET /api/v1/networks/cellular/subscriptions/{subscriptionId}",
+    "categories": [
+      "connection",
+      "api"
+    ],
+    "length": 104
+  },
+  {
+    "id": 235,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3702
+  },
+  {
+    "id": 236,
+    "section": "GET /api/v1/networks/cellular/subscriptions/{subscriptionId}/location",
+    "categories": [
+      "connection",
+      "api"
+    ],
+    "length": 104
+  },
+  {
+    "id": 237,
+    "section": "GET /api/v1/networks/cellular/subscriptions/06361407/location",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 715
+  },
+  {
+    "id": 238,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1015
+  },
+  {
+    "id": 239,
+    "section": "GET /api/v1/networks/cellular/subscriptions/{subscriptionId}/traffic/history",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 475
+  },
+  {
+    "id": 240,
+    "section": "200 OK",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2111
+  },
+  {
+    "id": 241,
+    "section": "A P I",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 3156
+  },
+  {
+    "id": 242,
+    "section": "POST /api/v0/decoders/binary",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3238
+  },
+  {
+    "id": 243,
+    "section": "POST /api/v0/decoders/binary",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 727
+  },
+  {
+    "id": 244,
+    "section": "POST /api/v0/decoders/binary/test",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5819
+  },
+  {
+    "id": 245,
+    "section": "POST /api/v0/decoders/csv",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1435
+  },
+  {
+    "id": 246,
+    "section": "POST /api/v0/decoders/csv",
+    "categories": [
+      "connection",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 998
+  },
+  {
+    "id": 247,
+    "section": "POST /api/v0/decoders/csv/test",
+    "categories": [
+      "connection",
+      "data",
+      "alarm",
+      "api"
+    ],
+    "length": 959
+  },
+  {
+    "id": 248,
+    "section": "STRING",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 911
+  },
+  {
+    "id": 249,
+    "section": "POST /api/v0/data/streams/{streamId}",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2113
+  },
+  {
+    "id": 250,
+    "section": "POST /api/v0/decoders/binary/test",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 516
+  },
+  {
+    "id": 251,
+    "section": "POST /api/v0/decoders/binary/test",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 25778
+  },
+  {
+    "id": 252,
+    "section": "ACTIVATED",
+    "categories": [
+      "device",
+      "audit"
+    ],
+    "length": 110
+  },
+  {
+    "id": 253,
+    "section": "FLAKY",
+    "categories": [
+      "device",
+      "audit",
+      "data",
+      "alarm"
+    ],
+    "length": 1657
+  },
+  {
+    "id": 254,
+    "section": "ACTIVATED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3040
+  },
+  {
+    "id": 255,
+    "section": "POST /api/v1/device-analytics/rules",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "alarm",
+      "api"
+    ],
+    "length": 1453
+  },
+  {
+    "id": 256,
+    "section": "A P I",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3161
+  },
+  {
+    "id": 257,
+    "section": "POST /api/v0/data/streams/{streamId}",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 201
+  },
+  {
+    "id": 258,
+    "section": "POST /api/v0/data/streams/myDeviceTemperature",
+    "categories": [
+      "device",
+      "data",
+      "command"
+    ],
+    "length": 566
+  },
+  {
+    "id": 259,
+    "section": "POST /api/v0/data/streams/myDeviceTemperatureAndPressure",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1151
+  },
+  {
+    "id": 260,
+    "section": "POST /api/v0/data/bulk",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1006
+  },
+  {
+    "id": 261,
+    "section": "GET /api/v0/data/streams/{streamId}",
+    "categories": [
+      "connection",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 395
+  },
+  {
+    "id": 262,
+    "section": "GET /api/v0/data/streams/myDeviceTemperature",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 2849
+  },
+  {
+    "id": 263,
+    "section": "POST /api/v1/data/search",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2925
+  },
+  {
+    "id": 264,
+    "section": "POST /api/v1/data/search",
+    "categories": [
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 693
+  },
+  {
+    "id": 265,
+    "section": "POST /api/v1/data/search/hits",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 909
+  },
+  {
+    "id": 266,
+    "section": "POST /api/v0/data/search/hits",
+    "categories": [
+      "device",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 934
+  },
+  {
+    "id": 267,
+    "section": "POST /api/v1/data/search/hits",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5810
+  },
+  {
+    "id": 268,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 5204
+  },
+  {
+    "id": 269,
+    "section": "GET /api/v1/event2action/actionPolicies/{policyId}",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 16106
+  },
+  {
+    "id": 270,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1457
+  },
+  {
+    "id": 271,
+    "section": "200 OK responses)",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 4323
+  },
+  {
+    "id": 272,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 491
+  },
+  {
+    "id": 273,
+    "section": "POST /api/v0/data/streams/my-stream",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1665
+  },
+  {
+    "id": 274,
+    "section": "POST /api/v0/topics/fifo",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 827
+  },
+  {
+    "id": 275,
+    "section": "POST /api/v0/apiKeys",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "api"
+    ],
+    "length": 268
+  },
+  {
+    "id": 276,
+    "section": "POST /api/v0/apiKeys",
+    "categories": [
+      "connection",
+      "device",
+      "command",
+      "api"
+    ],
+    "length": 190
+  },
+  {
+    "id": 277,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1983
+  },
+  {
+    "id": 278,
+    "section": "GET /api/v1/deviceMgt/devices/urn:lo:nsid:mqtt:myDevice",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1976
+  },
+  {
+    "id": 279,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1799
+  },
+  {
+    "id": 280,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1185
+  },
+  {
+    "id": 281,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 32538
+  },
+  {
+    "id": 282,
+    "section": "PATCH /api/v1/deviceMgt/devices/<myDeviceId>",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 2767
+  },
+  {
+    "id": 283,
+    "section": "PATCH /api/v1/deviceMgt/devices/<myDeviceId>",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 16440
+  },
+  {
+    "id": 284,
+    "section": "POST /api/v1/data/search/hits",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 8124
+  },
+  {
+    "id": 285,
+    "section": "HTTP REST",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 13288
+  },
+  {
+    "id": 286,
+    "section": "HTTP REST",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 2249
+  },
+  {
+    "id": 287,
+    "section": "REST API",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "api"
+    ],
+    "length": 1025
+  },
+  {
+    "id": 288,
+    "section": "ONLINE",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "api"
+    ],
+    "length": 316
+  },
+  {
+    "id": 289,
+    "section": "INITIALIZING",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 1642
+  },
+  {
+    "id": 290,
+    "section": "PROCESSED",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 12566
+  },
+  {
+    "id": 291,
+    "section": "GET /api/v1/deviceMgt/devices HTTP/1.1",
+    "categories": [
+      "connection",
+      "device",
+      "audit"
+    ],
+    "length": 166
+  },
+  {
+    "id": 292,
+    "section": "403 Forbidden",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 841
+  },
+  {
+    "id": 293,
+    "section": "GET /api/v0/topics/fifo?page=100&size=20 HTTP/1.1",
+    "categories": [
+      "connection",
+      "data",
+      "api"
+    ],
+    "length": 940
+  },
+  {
+    "id": 294,
+    "section": "GET /api/v1/deviceMgt/devices?limit=100&offset=20 HTTP/1.1",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 14236
+  },
+  {
+    "id": 295,
+    "section": "MQTTS/WS",
+    "categories": [
+      "connection",
+      "audit",
+      "alarm"
+    ],
+    "length": 107
+  },
+  {
+    "id": 296,
+    "section": "MQTTS/WS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 20523
+  },
+  {
+    "id": 297,
+    "section": "MQTTS/WS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 20786
+  },
+  {
+    "id": 298,
+    "section": "POST /api/v1/event2action/actionPolicies",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3356
+  },
+  {
+    "id": 299,
+    "section": "GET /api/v1/event2action/actionPolicies/{policyId}",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 36049
+  },
+  {
+    "id": 300,
+    "section": "INFOALERT",
+    "categories": [
+      "alarm"
+    ],
+    "length": 259
+  },
+  {
+    "id": 301,
+    "section": "LOWMEDIUM",
+    "categories": [
+      "audit",
+      "data",
+      "alarm"
+    ],
+    "length": 1162
+  },
+  {
+    "id": 302,
+    "section": "ALWAYS",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 3277
+  },
+  {
+    "id": 303,
+    "section": "INFOALERT",
+    "categories": [
+      "audit",
+      "alarm"
+    ],
+    "length": 260
+  },
+  {
+    "id": 304,
+    "section": "LOWMEDIUM",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 23113
+  },
+  {
+    "id": 305,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 917
+  },
+  {
+    "id": 306,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 755
+  },
+  {
+    "id": 307,
+    "section": "ERROR",
+    "categories": [
+      "audit",
+      "data",
+      "command"
+    ],
+    "length": 175
+  },
+  {
+    "id": 308,
+    "section": "ERROR",
+    "categories": [
+      "audit",
+      "data"
+    ],
+    "length": 279
+  },
+  {
+    "id": 309,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 222
+  },
+  {
+    "id": 310,
+    "section": "ERROR",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "api"
+    ],
+    "length": 850
+  },
+  {
+    "id": 311,
+    "section": "POST /api/v1/network-metrics",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 6328
+  },
+  {
+    "id": 312,
+    "section": "POST /api/v1/network-metrics/lostMessagesRatio",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 7943
+  },
+  {
+    "id": 313,
+    "section": "POST /api/v1/vendor/customers",
+    "categories": [
+      "audit",
+      "alarm"
+    ],
+    "length": 595
+  },
+  {
+    "id": 314,
+    "section": "GET /api/v1/vendor/bss/customers/{tenantId}/compliance/validated",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm"
+    ],
+    "length": 1984
+  },
+  {
+    "id": 315,
+    "section": "POST /api/v1/vendor/bss/customers/{tenantId}/subscriptions?ruleDisplayName={displayName}",
+    "categories": [
+      "alarm"
+    ],
+    "length": 427
+  },
+  {
+    "id": 316,
+    "section": "GET /api/v1/vendor/bss/customers/{tenantId}/subscriptions",
+    "categories": [
+      "command",
+      "alarm"
+    ],
+    "length": 195
+  },
+  {
+    "id": 317,
+    "section": "DELETE /api/v1/vendor/bss/customers/{tenantId}/subscriptions?ruleId={ruleId}",
+    "categories": [
+      "command",
+      "alarm"
+    ],
+    "length": 550
+  },
+  {
+    "id": 318,
+    "section": "DELETE /api/v1/vendor/customers/{tenantId}",
+    "categories": [
+      "connection",
+      "device",
+      "data",
+      "command"
+    ],
+    "length": 363
+  },
+  {
+    "id": 319,
+    "section": "LPWAN",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 15039
+  },
+  {
+    "id": 320,
+    "section": "429 Too Many requests response on his own by retrying the request.",
+    "categories": [
+      "connection",
+      "device",
+      "audit",
+      "data",
+      "command",
+      "alarm",
+      "api"
+    ],
+    "length": 731
+  }
+]

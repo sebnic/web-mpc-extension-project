@@ -1,1 +1,18 @@
 /* TopbarComponent — styles propres au composant */
+
+.btn-toggle-activity {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-toggle-activity:hover {
+  background: var(--border);
+  color: var(--text);
+}

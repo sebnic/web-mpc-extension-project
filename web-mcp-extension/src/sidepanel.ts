@@ -274,8 +274,15 @@ class SidePanelController {
           portalResult = { error: String(e) };
         }
 
+        // Gemini function_response.response must be a JSON object, not an array.
+        // Wrap arrays (e.g. search_lo_docs results) in { result: [...] }.
+        const responsePayload: Record<string, unknown> =
+          Array.isArray(portalResult)
+            ? { result: portalResult }
+            : (portalResult as Record<string, unknown>);
+
         response = await this.chatSession.sendMessage({
-          message: [{ functionResponse: { name: toolName, response: portalResult as Record<string, unknown> } }],
+          message: [{ functionResponse: { name: toolName, response: responsePayload } }],
         });
       }
 

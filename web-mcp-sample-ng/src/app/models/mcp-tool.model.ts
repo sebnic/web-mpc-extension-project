@@ -1,6 +1,6 @@
 export interface McpInputSchema {
   type: 'object';
-  properties: Record<string, { type: string; description?: string; enum?: string[]; items?: { type: string }; }>;
+  properties: Record<string, { type: string; description?: string; enum?: string[]; items?: { type: string; enum?: string[] }; }>;
   required?: string[];
 }
 

@@ -1,1 +1,15 @@
 /* ActivityLogComponent — styles propres au composant */
+
+.panel-header {
+  cursor: pointer;
+  user-select: none;
+}
+.panel-header:hover { opacity: 0.85; }
+
+.chevron {
+  font-size: 11px;
+  margin-left: 6px;
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.chevron.collapsed { transform: rotate(-90deg); }

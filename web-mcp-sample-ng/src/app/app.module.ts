@@ -7,6 +7,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ActivityLogComponent } from './components/activity-log/activity-log.component';
+import { DevicesComponent } from './components/devices/devices.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ActivityLogComponent } from './components/activity-log/activity-log.com
     SidebarComponent,
     DashboardComponent,
     ActivityLogComponent,
+    DevicesComponent,
   ],
   imports: [
     BrowserModule,

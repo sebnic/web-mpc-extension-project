@@ -7,6 +7,8 @@ import { DocumentService } from './document.service';
 import { NotificationService } from './notification.service';
 import { DashboardService } from './dashboard.service';
 import { UserStatus } from '../models/user.model';
+import { LoDeviceService } from './lo-device.service';
+import { LoDocService } from './lo-doc.service';
 
 /**
  * McpService — cœur de l'intégration MCP.
@@ -37,6 +39,8 @@ export class McpService implements OnDestroy {
     private readonly documentService: DocumentService,
     private readonly notificationService: NotificationService,
     private readonly dashboardService: DashboardService,
+    private readonly loDeviceService: LoDeviceService,
+    private readonly loDocService: LoDocService,
   ) {
     this.ensureModelContext();
 
@@ -288,6 +292,106 @@ export class McpService implements OnDestroy {
       }),
     });
     this.activityLog.log('info', { status: 'Prompt enregistré' }, 'generate_report');
+
+    // ── Live Objects tools ───────────────────────────────────────────────────
+
+    this.registerTool({
+      name: 'get_device_info',
+      description: 'Retourne les métadonnées complètes d\'un device Live Objects : type de connectivité, statut, dernière vue, firmware, tags.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          deviceId: { type: 'string', description: 'Live Objects device URN, ex: urn:lo:nsid:mqtt:sensor-temp-paris-01' },
+        },
+        required: ['deviceId'],
+      },
+      execute: async ({ deviceId } = {}) => {
+        const device = this.loDeviceService.findById(deviceId as string);
+        if (!device) return { error: `Device not found: ${deviceId as string}` };
+        return device;
+      },
+    });
+
+    this.registerTool({
+      name: 'get_audit_logs',
+      description: 'Retourne les entrées d\'audit log pour un device LO. Chaque entrée contient : timestamp, level (INFO/WARNING/ERROR), errorCode, message. Utiliser pour diagnostiquer des problèmes de connectivité : MQTT_AUTH_FAILED, TLS_CERTIFICATE_EXPIRED, etc.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          deviceId: { type: 'string', description: 'URN du device' },
+          since: { type: 'string', description: 'Date ISO 8601 pour filtrer les événements depuis cette date (optionnel)' },
+          limit: { type: 'number', description: 'Nombre maximum d\'entrées à retourner (défaut 20)' },
+        },
+        required: ['deviceId'],
+      },
+      execute: async ({ deviceId, since, limit } = {}) =>
+        this.loDeviceService.getAuditLogs(deviceId as string, since as string | undefined, (limit as number) ?? 20),
+    });
+
+    this.registerTool({
+      name: 'get_device_messages',
+      description: 'Retourne les derniers messages de données envoyés par un device (payloads capteurs, coordonnées GPS, etc.).',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          deviceId: { type: 'string', description: 'URN du device' },
+          limit: { type: 'number', description: 'Nombre maximum de messages (défaut 10)' },
+        },
+        required: ['deviceId'],
+      },
+      execute: async ({ deviceId, limit } = {}) =>
+        this.loDeviceService.getMessages(deviceId as string, (limit as number) ?? 10),
+    });
+
+    this.registerTool({
+      name: 'search_lo_docs',
+      description: 'Recherche full-text dans la documentation développeur Live Objects. Retourne les extraits les plus pertinents pour une requête. Utiliser pour : codes d\'erreur, endpoints API, procédures de configuration, guides de dépannage.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          query: { type: 'string', description: 'Requête en langage naturel, ex: "MQTT_AUTH_FAILED" ou "renouvellement certificat TLS"' },
+          categories: {
+            type: 'array',
+            items: { type: 'string', enum: ['connection', 'device', 'audit', 'data', 'command', 'alarm', 'api'] },
+            description: 'Filtrer par catégorie de documentation (optionnel)',
+          },
+          limit: { type: 'number', description: 'Nombre max de chunks à retourner (défaut 6)' },
+        },
+        required: ['query'],
+      },
+      execute: async ({ query, categories, limit } = {}) =>
+        this.loDocService.search(query as string, categories as string[] | undefined, (limit as number) ?? 6),
+    });
+
+    // ── LO Resource : selected_device ────────────────────────────────────────
+    mc.registerResource({
+      name: 'selected_device',
+      description: 'Device actuellement sélectionné dans l\'interface Live Objects. Contient les métadonnées complètes du device. Lire cette ressource avant d\'appeler d\'autres outils pour connaître le device en cours d\'analyse.',
+      mimeType: 'application/json',
+      read: async () => ({
+        content: JSON.stringify(this.loDeviceService.getSelectedDevice()),
+      }),
+    });
+    this.activityLog.log('info', { status: 'Ressource enregistrée' }, 'selected_device');
+
+    // ── LO Prompt : diagnose_connectivity ────────────────────────────────────
+    mc.registerPrompt({
+      name: 'diagnose_connectivity',
+      description: 'Diagnostic guidé pour un device Live Objects qui ne se connecte pas. Analyse les audit logs, l\'état du device, consulte la documentation et formule un diagnostic avec étapes de résolution.',
+      arguments: [
+        { name: 'deviceId', description: 'URN du device Live Objects à diagnostiquer', required: true },
+      ],
+      get: async ({ deviceId = '' }: Record<string, string> = {}) => ({
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Je rencontre un problème de connectivité avec le device Live Objects : **${deviceId}**\n\nPeux-tu :\n1. Appeler \`get_device_info\` pour voir l'état actuel du device\n2. Appeler \`get_audit_logs\` pour analyser les erreurs récentes\n3. Si tu trouves un error code, appeler \`search_lo_docs\` pour trouver la procédure de résolution dans la documentation\n\nFormule un diagnostic clair et des étapes concrètes pour résoudre le problème.`,
+          },
+        }],
+      }),
+    });
+    this.activityLog.log('info', { status: 'Prompt enregistré' }, 'diagnose_connectivity');
   }
 
   // ---------------------------------------------------------------------------

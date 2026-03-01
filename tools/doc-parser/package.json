@@ -1,0 +1,12 @@
+{
+  "name": "lo-doc-parser",
+  "version": "1.0.0",
+  "description": "Parser de la documentation Live Objects → chunks JSON pour MCP Resource",
+  "type": "module",
+  "scripts": {
+    "parse": "node parse.mjs"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}

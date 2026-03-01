@@ -101,6 +101,21 @@ html, body {
   grid-template-columns: 280px 1fr 360px;
   height: calc(100vh - 56px);
   overflow: hidden;
+  transition: grid-template-columns 0.25s ease;
+}
+
+.main.activity-hidden {
+  grid-template-columns: 280px 1fr 0px;
+}
+
+app-activity-log {
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.main.activity-hidden app-activity-log {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */

@@ -1,9 +1,9 @@
 <aside class="activity-panel">
-  <div class="panel-header">
-    <h2>🔌 Activité MCP</h2>
-    <button (click)="clear()">Effacer</button>
+  <div class="panel-header" (click)="toggle()">
+    <h2>🔌 Activité MCP <span class="chevron" [class.collapsed]="!visible">▾</span></h2>
+    <button (click)="$event.stopPropagation(); clear()">Effacer</button>
   </div>
-  <div class="log-list">
+  <div class="log-list" *ngIf="visible">
     <ng-container *ngIf="entries$ | async as entries">
       <div
         *ngFor="let entry of entries; trackBy: trackById"

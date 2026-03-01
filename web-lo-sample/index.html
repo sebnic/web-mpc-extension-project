@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Objects — Diagnostic Assistant</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:        #ff7900;
+      --orange-hover:  #f16e00;
+      --orange-dim:    rgba(255,121,0,0.12);
+      --orange-dim2:   rgba(255,121,0,0.25);
+      --bg:            #0f1117;
+      --surface:       #181c26;
+      --surface-alt:   #1e2333;
+      --border:        #2a2f42;
+      --text:          #e8eaf0;
+      --text-muted:    #6b7394;
+      --success:       #22c55e;
+      --warning:       #f59e0b;
+      --error:         #ef4444;
+      --info:          #3b82f6;
+      --radius:        10px;
+      --font:          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); font-size: 13px; overflow: hidden; }
+
+    /* ── Layout ── */
+    .app { display: grid; grid-template-rows: 48px 1fr; grid-template-columns: 260px 1fr 300px; height: 100vh; transition: grid-template-columns 0.25s ease; }
+    .app.activity-hidden { grid-template-columns: 260px 1fr 0px; }
+    .activity-panel { overflow: hidden; transition: opacity 0.2s ease; }
+    .app.activity-hidden .activity-panel { opacity: 0; pointer-events: none; }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      background: var(--surface);
+      border-bottom: 2px solid var(--orange);
+    }
+    .header-logo { display: flex; align-items: center; gap: 8px; }
+    .header-logo .dot { width: 10px; height: 10px; background: var(--orange); border-radius: 50%; }
+    .header-logo h1 { font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
+    .header-logo span { color: var(--text-muted); font-size: 12px; }
+    .header-pill {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,121,0,0.3);
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
+    /* ── Sidebar devices ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 12px 14px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .device-count { background: var(--orange-dim); color: var(--orange); border-radius: 10px; padding: 1px 6px; font-size: 10px; }
+    .device-list { flex: 1; overflow-y: auto; padding: 8px 0; }
+    .device-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .device-item:hover { background: var(--surface-alt); }
+    .device-item.active { background: var(--orange-dim); border-left-color: var(--orange); }
+    .device-item-name { font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .device-item-id { font-size: 10px; color: var(--text-muted); font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .device-item-row { display: flex; align-items: center; gap: 6px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .status-dot.ONLINE  { background: var(--success); box-shadow: 0 0 4px var(--success); }
+    .status-dot.OFFLINE { background: var(--error); }
+    .status-label { font-size: 10px; }
+    .status-label.ONLINE  { color: var(--success); }
+    .status-label.OFFLINE { color: var(--error); }
+    .device-type-badge {
+      margin-left: auto;
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--surface-alt);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Main panel ── */
+    .main { overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 10px 16px;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .card-body { padding: 16px; }
+
+    /* Device detail */
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail-field { display: flex; flex-direction: column; gap: 3px; }
+    .detail-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .detail-value { font-size: 12px; font-family: monospace; word-break: break-all; }
+    .detail-value.online { color: var(--success); }
+    .detail-value.offline { color: var(--error); }
+
+    /* Audit logs */
+    .audit-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; }
+    .audit-item {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: start;
+    }
+    .audit-level { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .audit-level.ERROR   { background: var(--error); box-shadow: 0 0 4px var(--error); }
+    .audit-level.INFO    { background: var(--info); }
+    .audit-level.WARNING { background: var(--warning); }
+    .audit-content { display: flex; flex-direction: column; gap: 2px; }
+    .audit-message { font-size: 12px; }
+    .audit-code { font-size: 10px; font-family: monospace; color: var(--orange); }
+    .audit-time { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+    .no-logs { color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px; }
+
+    /* Messages */
+    .msg-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+    .msg-item { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
+    .msg-topic { font-size: 10px; font-family: monospace; color: var(--orange); margin-bottom: 4px; }
+    .msg-payload { font-size: 11px; font-family: monospace; color: var(--text-muted); white-space: pre; }
+    .msg-time { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-align: right; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; }
+
+    /* ── Activity log (right panel) ── */
+    .activity-panel {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .activity-header {
+      padding: 12px 14px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+    .activity-header-title { display: flex; align-items: center; gap: 6px; }
+    .activity-chevron { font-size: 10px; transition: transform 0.2s; }
+    .activity-chevron.collapsed { transform: rotate(-90deg); }
+    .activity-list.collapsed { flex: 0; min-height: 0; overflow: hidden; padding: 0; }
+    #toggle-activity-btn {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: color 0.12s, border-color 0.12s;
+      white-space: nowrap;
+    }
+    #toggle-activity-btn:hover { color: var(--orange); border-color: rgba(255,121,0,0.4); }
+    #clear-log-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.12s;
+    }
+    #clear-log-btn:hover { color: var(--orange); }
+    .activity-list { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .activity-empty { color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 10px; }
+    .log-entry {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+    .log-entry.call   { border-left: 3px solid var(--orange); }
+    .log-entry.result { border-left: 3px solid var(--success); }
+    .log-entry.error  { border-left: 3px solid var(--error); }
+    .log-entry.info   { border-left: 3px solid var(--info); }
+    .log-type { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .log-type.call   { color: var(--orange); }
+    .log-type.result { color: var(--success); }
+    .log-type.error  { color: var(--error); }
+    .log-type.info   { color: var(--info); }
+    .log-name { font-weight: 700; font-family: monospace; }
+    .log-detail { color: var(--text-muted); margin-top: 2px; word-break: break-all; }
+    .log-time { font-size: 9px; color: var(--text-muted); margin-top: 3px; }
+
+    /* Sidebar tools */
+    #sidebar-tools-section { border-top: 1px solid var(--border); }
+    #sidebar-tools-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #sidebar-tools-header:hover { background: var(--surface-alt); }
+    #sidebar-tools-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    #sidebar-tools-chevron { font-size: 10px; color: var(--text-muted); transition: transform 0.2s; }
+    #sidebar-tools-chevron.collapsed { transform: rotate(-90deg); }
+    #sidebar-tools { list-style: none; padding: 4px 14px 8px; display: flex; flex-direction: column; gap: 4px; overflow: hidden; transition: max-height 0.2s ease; }
+    #sidebar-tools.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+    .tool-badge-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+    .tool-status { width: 6px; height: 6px; background: var(--success); border-radius: 50%; flex-shrink: 0; }
+    .tool-name { flex: 1; font-family: monospace; color: var(--text-muted); }
+    .tool-calls { font-size: 10px; color: var(--orange); background: var(--orange-dim); border-radius: 8px; padding: 1px 5px; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,121,0,0.3); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="header-logo">
+      <div class="dot"></div>
+      <h1>Live Objects</h1>
+      <span>— Diagnostic Assistant</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-left:auto;">
+      <button id="toggle-activity-btn" title="Afficher / masquer le panneau Activité MCP">☰ Activité</button>
+      <span id="mcp-status-badge" class="header-pill">⏳ MCP chargement…</span>
+    </div>
+  </header>
+
+  <!-- Sidebar: device list -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      Devices
+      <span class="device-count" id="device-count">0</span>
+    </div>
+    <ul class="device-list" id="device-list"></ul>
+    <div id="sidebar-tools-section">
+      <div id="sidebar-tools-header">
+        <span id="sidebar-tools-label">Outils MCP</span>
+        <span id="sidebar-tools-chevron">▾</span>
+      </div>
+      <ul id="sidebar-tools"></ul>
+    </div>
+  </aside>
+
+  <!-- Main: device detail -->
+  <main class="main" id="main-panel">
+    <div class="empty-state">
+      <div class="icon">🔌</div>
+      <p>Sélectionnez un device pour afficher son état<br>et interroger l'assistant de diagnostic.</p>
+    </div>
+  </main>
+
+  <!-- Right: activity log -->
+  <aside class="activity-panel">
+    <div class="activity-header" id="activity-header">
+      <span class="activity-header-title">
+        Activité MCP
+        <span class="activity-chevron" id="activity-chevron">▾</span>
+      </span>
+      <button id="clear-log-btn" title="Vider le log">✕ Vider</button>
+    </div>
+    <div class="activity-list" id="log-list">
+      <div class="activity-empty">
+        Aucune activité MCP.<br>Ouvrez le panneau extension et posez une question.
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

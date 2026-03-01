@@ -1,8 +1,9 @@
 <div class="layout">
-  <app-topbar></app-topbar>
-  <div class="main">
-    <app-sidebar></app-sidebar>
-    <app-dashboard></app-dashboard>
+  <app-topbar (toggleActivity)="toggleActivity()"></app-topbar>
+  <div class="main" [class.activity-hidden]="!activityVisible">
+    <app-sidebar (viewChange)="onViewChange($event)"></app-sidebar>
+    <app-dashboard *ngIf="currentView === 'dashboard'"></app-dashboard>
+    <app-devices  *ngIf="currentView === 'devices'"></app-devices>
     <app-activity-log></app-activity-log>
   </div>
 </div>

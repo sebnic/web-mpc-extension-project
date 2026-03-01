@@ -11,4 +11,8 @@
   <span class="badge badge-primary" style="margin-left:8px;">
     {{ (toolCount$ | async) ?? 0 }} outils exposés
   </span>
+  <button class="btn-toggle-activity" (click)="onToggleActivity()"
+          [title]="'Afficher / masquer le panneau Activité MCP'">
+    ☰ Activité
+  </button>
 </header>

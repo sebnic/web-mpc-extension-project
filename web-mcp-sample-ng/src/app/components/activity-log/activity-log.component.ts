@@ -10,6 +10,7 @@ import { ActivityLogService } from '../../services/activity-log.service';
 })
 export class ActivityLogComponent implements OnInit {
   entries$!: Observable<ActivityLogEntry[]>;
+  visible = true;
 
   constructor(private readonly activityLogService: ActivityLogService) {}
 
@@ -19,6 +20,10 @@ export class ActivityLogComponent implements OnInit {
 
   clear(): void {
     this.activityLogService.clear();
+  }
+
+  toggle(): void {
+    this.visible = !this.visible;
   }
 
   labelFor(type: ActivityLogType): string {

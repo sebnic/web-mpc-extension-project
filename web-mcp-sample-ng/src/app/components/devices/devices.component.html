@@ -1,0 +1,127 @@
+<main class="devices-layout">
+
+  <!-- Left: device list -->
+  <aside class="device-list-panel">
+    <div class="panel-header">
+      <span>Devices Live Objects</span>
+      <span class="count-badge">{{ devices.length }}</span>
+    </div>
+    <ul class="device-list">
+      <li
+        *ngFor="let device of devices"
+        class="device-item"
+        [class.active]="isSelected(device)"
+        (click)="selectDevice(device)">
+        <div class="device-name">{{ device.name }}</div>
+        <div class="device-id">{{ device.id }}</div>
+        <div class="device-row">
+          <span class="status-dot" [ngClass]="device.status.connectivity.value"></span>
+          <span class="status-label" [ngClass]="device.status.connectivity.value">{{ device.status.connectivity.value }}</span>
+          <span class="type-badge">{{ device.type }}</span>
+        </div>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Right: device detail -->
+  <section class="device-detail">
+
+    <!-- Empty state -->
+    <div *ngIf="!(selectedDevice$ | async)" class="empty-state">
+      <div class="empty-icon">🔌</div>
+      <p>Sélectionnez un device pour afficher son état<br>et interroger l'assistant de diagnostic.</p>
+    </div>
+
+    <ng-container *ngIf="selectedDevice$ | async as device">
+
+      <!-- Info card -->
+      <div class="card">
+        <div class="card-header">
+          <span>Device Info</span>
+          <span class="card-id">{{ device.id }}</span>
+        </div>
+        <div class="card-body detail-grid">
+          <div class="detail-field">
+            <div class="detail-label">Nom</div>
+            <div class="detail-value">{{ device.name }}</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Statut</div>
+            <div class="detail-value" [ngClass]="device.status.connectivity.value.toLowerCase()">
+              {{ device.status.connectivity.value }}
+            </div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Type</div>
+            <div class="detail-value">{{ device.type }}</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Firmware</div>
+            <div class="detail-value">{{ device.properties.firmware }}</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Modèle</div>
+            <div class="detail-value">{{ device.properties.model }}</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Localisation</div>
+            <div class="detail-value">{{ device.properties.location }}</div>
+          </div>
+          <div class="detail-field full-width">
+            <div class="detail-label">Tags</div>
+            <div class="detail-value">{{ device.tags.join(', ') }}</div>
+          </div>
+          <div class="detail-field full-width">
+            <div class="detail-label">Dernière connexion</div>
+            <div class="detail-value">{{ formatDate(device.lastSeen) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit logs card -->
+      <div class="card">
+        <div class="card-header">
+          <span>Audit Logs</span>
+          <span class="count-badge">{{ getAuditLogs(device.id).length }}</span>
+        </div>
+        <div class="card-body">
+          <div *ngIf="getAuditLogs(device.id).length === 0" class="no-data">
+            ✅ Aucun événement d'audit récent.
+          </div>
+          <div class="audit-list">
+            <div *ngFor="let log of getAuditLogs(device.id)" class="audit-item">
+              <span class="audit-dot" [ngClass]="log.level"></span>
+              <div class="audit-content">
+                <div class="audit-message">{{ log.message }}</div>
+                <div *ngIf="log.details['errorCode']" class="audit-code">{{ log.details['errorCode'] }}</div>
+              </div>
+              <div class="audit-time">{{ formatDate(log.timestamp) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages card -->
+      <div class="card">
+        <div class="card-header">
+          <span>Derniers Messages</span>
+          <span class="count-badge">{{ getMessages(device.id).length }}</span>
+        </div>
+        <div class="card-body">
+          <div *ngIf="getMessages(device.id).length === 0" class="no-data">
+            Aucun message de données.
+          </div>
+          <div class="msg-list">
+            <div *ngFor="let msg of getMessages(device.id)" class="msg-item">
+              <div class="msg-stream">{{ msg.streamId }}</div>
+              <pre class="msg-payload">{{ payloadString(msg.value) }}</pre>
+              <div class="msg-time">{{ formatDate(msg.timestamp) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </section>
+
+</main>

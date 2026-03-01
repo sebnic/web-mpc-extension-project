@@ -1,1 +1,18 @@
 /* SidebarComponent — styles propres au composant */
+
+.section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+.section-toggle:hover { opacity: 0.8; }
+
+.chevron {
+  font-size: 11px;
+  transition: transform 0.2s;
+  margin-left: 6px;
+}
+.chevron.collapsed { transform: rotate(-90deg); }
