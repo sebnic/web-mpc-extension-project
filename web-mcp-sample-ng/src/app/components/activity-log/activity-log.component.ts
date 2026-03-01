@@ -28,10 +28,11 @@ export class ActivityLogComponent implements OnInit {
 
   labelFor(type: ActivityLogType): string {
     switch (type) {
-      case 'call':   return '▶ Appel reçu';
-      case 'result': return '✔ Résultat envoyé';
-      case 'error':  return '✖ Erreur';
-      default:       return 'ℹ Info';
+      case 'call':     return '▶ Appel reçu';
+      case 'result':   return '✔ Résultat envoyé';
+      case 'error':    return '✖ Erreur';
+      case 'thinking': return '💭 Pensées';
+      default:         return 'ℹ Info';
     }
   }
 

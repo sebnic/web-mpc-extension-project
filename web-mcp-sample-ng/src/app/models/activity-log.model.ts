@@ -1,4 +1,4 @@
-export type ActivityLogType = 'call' | 'result' | 'error' | 'info';
+export type ActivityLogType = 'call' | 'result' | 'error' | 'info' | 'thinking';
 
 export interface ActivityLogEntry {
   id: string;

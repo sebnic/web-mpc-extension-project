@@ -117,6 +117,16 @@ class BackgroundService {
             .catch((e: Error) => sendResponse({ error: e.message }));
           return true;
         }
+
+        // ── Thinking — forward thought text to the portal tab ────────────
+        if (message.type === 'THINKING_UPDATE') {
+          chrome.tabs.sendMessage(
+            message.tabId,
+            { type: 'THINKING_UPDATE', tabId: message.tabId, text: message.text } as ExtensionMessage,
+            () => { void chrome.runtime.lastError; }, // supprime "Unchecked runtime.lastError"
+          );
+          return;
+        }
       },
     );
   }
@@ -169,7 +179,13 @@ class BackgroundService {
     chrome.tabs.sendMessage(
       message.tabId,
       { type: 'READ_RESOURCE_ON_PAGE', resourceName: message.resourceName, callId: message.callId } as ExtensionMessage,
-      (response: unknown) => sendResponse(response),
+      (response: unknown) => {
+        if (chrome.runtime.lastError) {
+          sendResponse({ status: 'error', result: { error: chrome.runtime.lastError.message } });
+          return;
+        }
+        sendResponse(response);
+      },
     );
   }
 
@@ -193,7 +209,13 @@ class BackgroundService {
     chrome.tabs.sendMessage(
       message.tabId,
       { type: 'GET_PROMPT_ON_PAGE', promptName: message.promptName, promptArgs: message.promptArgs, callId: message.callId } as ExtensionMessage,
-      (response: unknown) => sendResponse(response),
+      (response: unknown) => {
+        if (chrome.runtime.lastError) {
+          sendResponse({ status: 'error', result: { error: chrome.runtime.lastError.message } });
+          return;
+        }
+        sendResponse(response);
+      },
     );
   }
 
@@ -204,6 +226,7 @@ class BackgroundService {
     message: Extract<ExtensionMessage, { type: 'EXECUTE_TOOL_REQUEST' }>,
     sendResponse: (response?: unknown) => void,
   ): void {
+    console.log(`[MCP BackgroundService] forwardExecutionToTab → tabId=${message.tabId}, tool=${message.toolName}, callId=${message.callId}`);
     chrome.tabs.sendMessage(
       message.tabId,
       {
@@ -212,7 +235,18 @@ class BackgroundService {
         args: message.args,
         callId: message.callId,
       } as ExtensionMessage,
-      (response: ToolResponse) => sendResponse(response),
+      (response: ToolResponse) => {
+        if (chrome.runtime.lastError) {
+          const msg = chrome.runtime.lastError.message ?? '';
+          console.error(`[MCP BackgroundService] ❌ tabs.sendMessage lastError pour tabId=${message.tabId} :`, msg);
+          // Contexte d'extension invalidé (extension rechargée sans recharger la page)
+          const isStaleCtx = msg.includes('Receiving end does not exist') || msg.includes('Extension context invalidated');
+          sendResponse({ status: 'error', result: { error: isStaleCtx ? 'CONNECTION_LOST__RELOAD_PAGE' : msg } });
+          return;
+        }
+        console.log(`[MCP BackgroundService] ✅ Réponse reçue pour tool=${message.toolName} :`, response);
+        sendResponse(response);
+      },
     );
   }
 

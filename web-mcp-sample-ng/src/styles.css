@@ -374,6 +374,7 @@ tbody td { padding: 12px 18px; font-size: 13px; }
 .log-type-result { color: var(--success); }
 .log-type-error  { color: var(--error); }
 .log-type-info   { color: var(--text-muted); }
+.log-type-thinking { color: #c084fc; }
 
 .log-entry .log-tool {
   font-family: var(--mono);

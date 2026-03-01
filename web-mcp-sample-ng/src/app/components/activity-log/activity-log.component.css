@@ -13,3 +13,57 @@
   transition: transform 0.2s;
 }
 .chevron.collapsed { transform: rotate(-90deg); }
+
+/* — Thinking entries — */
+.log-entry-thinking {
+  background: rgba(168,85,247,0.06);
+  border-color: rgba(168,85,247,0.22);
+  padding: 0;
+  overflow: hidden;
+}
+
+.thinking-block {
+  width: 100%;
+  padding: 0;
+}
+
+.thinking-block summary {
+  padding: 7px 12px;
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  user-select: none;
+}
+.thinking-block summary::-webkit-details-marker { display: none; }
+.thinking-block summary::before {
+  content: '▶';
+  font-size: 8px;
+  flex-shrink: 0;
+  display: inline-block;
+  margin-right: 4px;
+  transition: transform 0.2s;
+  color: #a855f7;
+}
+.thinking-block[open] summary::before { transform: rotate(90deg); }
+.thinking-block[open] summary { border-bottom: 1px solid rgba(168,85,247,0.15); }
+
+.thought-time {
+  font-size: 10px;
+  color: var(--border, #334155);
+  margin-left: auto;
+}
+
+.thinking-body {
+  padding: 8px 12px 10px;
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-style: italic;
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}

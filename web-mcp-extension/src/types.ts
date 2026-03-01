@@ -136,7 +136,9 @@ export type ExtensionMessage =
   | { type: 'GET_PROMPT_ON_PAGE'; promptName: string; promptArgs: Record<string, string>; callId: string }
   // ── Sampling ──────────────────────────────────────────────────────────────
   | { type: 'SAMPLING_REQUEST'; requestId: string; tabId?: number; params: SamplingRequest }
-  | { type: 'SAMPLING_RESPONSE'; requestId: string; result?: SamplingResponse; error?: string };
+  | { type: 'SAMPLING_RESPONSE'; requestId: string; result?: SamplingResponse; error?: string }
+  // ── Thinking ──────────────────────────────────────────────────────────────
+  | { type: 'THINKING_UPDATE'; tabId: number; text: string };
 
 // ---------------------------------------------------------------------------
 // Paramètres de configuration Gemini

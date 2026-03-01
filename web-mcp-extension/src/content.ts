@@ -149,6 +149,12 @@ class ContentBridge {
           this.getPromptOnPage(request, sendResponse);
           return true;
         }
+        if (request.type === 'THINKING_UPDATE') {
+          window.dispatchEvent(new CustomEvent('MCP_THINKING_UPDATE', {
+            detail: { text: request.text },
+          }));
+          return;
+        }
       },
     );
   }
@@ -194,17 +200,21 @@ class ContentBridge {
     sendResponse: (response?: unknown) => void,
   ): void {
     const { callId, toolName, args } = request;
+    console.log(`[MCP ContentBridge] executeOnPage : tool=${toolName}, callId=${callId}`);
 
     const responseHandler = (event: Event) => {
       const detail = (event as CustomEvent<{ callId: string; result: unknown }>).detail;
+      console.log(`[MCP ContentBridge] MCP_EXECUTION_RESULT reçu : callId=${detail?.callId} (attendu=${callId}), match=${detail?.callId === callId}`);
       if (detail?.callId === callId) {
         cleanup();
+        console.log(`[MCP ContentBridge] ✅ Résultat transmis pour ${toolName} :`, detail.result);
         sendResponse({ status: 'success', result: detail.result } as ToolResponse);
       }
     };
 
     const timeoutId = setTimeout(() => {
       cleanup();
+      console.error(`[MCP ContentBridge] ⏱ Timeout pour tool=${toolName}, callId=${callId}`);
       sendResponse({
         status: 'error',
         result: { error: "Timeout : la page n'a pas répondu." },
@@ -219,6 +229,7 @@ class ContentBridge {
     const cleanup = () => window.removeEventListener('MCP_EXECUTION_RESULT', wrappedHandler);
 
     window.addEventListener('MCP_EXECUTION_RESULT', wrappedHandler);
+    console.log(`[MCP ContentBridge] dispatch EXECUTE_MCP_FROM_EXT → tool=${toolName}, callId=${callId}`);
     window.dispatchEvent(new CustomEvent('EXECUTE_MCP_FROM_EXT', { detail: { callId, toolName, args } }));
   }
 }

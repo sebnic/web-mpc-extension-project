@@ -31,6 +31,7 @@ export class McpService implements OnDestroy {
 
   private readonly onInjectReady: () => void;
   private readonly onExecuteRequest: (event: Event) => void;
+  private readonly onThinkingUpdate: (event: Event) => void;
 
   constructor(
     private readonly zone: NgZone,
@@ -45,6 +46,11 @@ export class McpService implements OnDestroy {
     this.ensureModelContext();
 
     // Binding des handlers pour pouvoir les removeEventListener plus tard
+    this.onThinkingUpdate = (event: Event) => {
+      const text = (event as CustomEvent<{ text: string }>).detail?.text ?? '';
+      if (text) this.zone.run(() => this.activityLog.log('thinking', text));
+    };
+
     this.onInjectReady = () => this.zone.run(() => {
       console.log('[MCP sample] MCP_INJECT_READY reçu — enregistrement des outils.');
       this.registerAllTools();
@@ -57,6 +63,7 @@ export class McpService implements OnDestroy {
 
     window.addEventListener('MCP_INJECT_READY', this.onInjectReady);
     window.addEventListener('EXECUTE_MCP_FROM_EXT', this.onExecuteRequest);
+    window.addEventListener('MCP_THINKING_UPDATE', this.onThinkingUpdate);
 
     // Fallback 3 s si l'extension n'est pas installée
     setTimeout(() => {
@@ -436,6 +443,7 @@ export class McpService implements OnDestroy {
   ngOnDestroy(): void {
     window.removeEventListener('MCP_INJECT_READY', this.onInjectReady);
     window.removeEventListener('EXECUTE_MCP_FROM_EXT', this.onExecuteRequest);
+    window.removeEventListener('MCP_THINKING_UPDATE', this.onThinkingUpdate);
     this._tools$.complete();
   }
 }

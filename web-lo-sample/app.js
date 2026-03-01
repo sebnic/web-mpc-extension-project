@@ -315,34 +315,38 @@ window.addEventListener('MCP_INJECT_READY', () => {
 });
 
 window.addEventListener('EXECUTE_MCP_FROM_EXT', async (event) => {
-  const { toolName, args, requestId } = event.detail ?? {};
+  const { toolName, args, callId } = event.detail ?? {};
+  console.log(`[app.js] EXECUTE_MCP_FROM_EXT reçu : tool=${toolName}, callId=${callId}`, args);
   if (!toolName) return;
 
   const handler = MCP_TOOLS[toolName];
   if (!handler) {
-    window.dispatchEvent(new CustomEvent('MCP_RESULT', {
-      detail: { requestId, error: `Unknown tool: ${toolName}` },
+    console.error(`[app.js] ❌ Outil inconnu : ${toolName}`);
+    window.dispatchEvent(new CustomEvent('MCP_EXECUTION_RESULT', {
+      detail: { callId, error: `Unknown tool: ${toolName}` },
     }));
     return;
   }
 
   try {
     const result = await handler(args ?? {});
-    window.dispatchEvent(new CustomEvent('MCP_RESULT', {
-      detail: { requestId, result: JSON.stringify(result, null, 2) },
+    console.log(`[app.js] ✅ Résultat de ${toolName} :`, result);
+    window.dispatchEvent(new CustomEvent('MCP_EXECUTION_RESULT', {
+      detail: { callId, result },
     }));
   } catch (err) {
-    window.dispatchEvent(new CustomEvent('MCP_RESULT', {
-      detail: { requestId, error: err.message },
+    console.error(`[app.js] ❌ Erreur dans ${toolName} :`, err);
+    window.dispatchEvent(new CustomEvent('MCP_EXECUTION_RESULT', {
+      detail: { callId, error: err.message },
     }));
   }
 });
 
 window.addEventListener('READ_RESOURCE_ON_PAGE', (event) => {
-  const { resourceName, requestId } = event.detail ?? {};
+  const { resourceName, callId } = event.detail ?? {};
   if (resourceName === 'selected_device') {
-    window.dispatchEvent(new CustomEvent('RESOURCE_READ_RESULT', {
-      detail: { requestId, content: readSelectedDeviceResource() },
+    window.dispatchEvent(new CustomEvent('READ_RESOURCE_RESULT', {
+      detail: { callId, result: readSelectedDeviceResource() },
     }));
   }
 });

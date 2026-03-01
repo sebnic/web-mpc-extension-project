@@ -7,13 +7,27 @@
     <ng-container *ngIf="entries$ | async as entries">
       <div
         *ngFor="let entry of entries; trackBy: trackById"
-        class="log-entry">
-        <div class="log-type" [ngClass]="'log-type-' + entry.type">
-          {{ labelFor(entry.type) }}
-        </div>
-        <div *ngIf="entry.toolName" class="log-tool">{{ entry.toolName }}</div>
-        <div class="log-body">{{ entry.body | json }}</div>
-        <div class="log-time">{{ formatTime(entry.timestamp) }}</div>
+        class="log-entry"
+        [class.log-entry-thinking]="entry.type === 'thinking'">
+
+        <ng-container *ngIf="entry.type === 'thinking'; else normalEntry">
+          <details class="thinking-block">
+            <summary>
+              <span class="log-type log-type-thinking">{{ labelFor(entry.type) }}</span>
+              <span class="thought-time">{{ formatTime(entry.timestamp) }}</span>
+            </summary>
+            <div class="thinking-body">{{ entry.body }}</div>
+          </details>
+        </ng-container>
+
+        <ng-template #normalEntry>
+          <div class="log-type" [ngClass]="'log-type-' + entry.type">
+            {{ labelFor(entry.type) }}
+          </div>
+          <div *ngIf="entry.toolName" class="log-tool">{{ entry.toolName }}</div>
+          <div class="log-body">{{ entry.body | json }}</div>
+          <div class="log-time">{{ formatTime(entry.timestamp) }}</div>
+        </ng-template>
       </div>
 
       <div *ngIf="entries.length === 0" class="log-empty">

@@ -3,7 +3,7 @@
   "name": "MCP Portal Assistant",
   "version": "1.0.0",
   "description": "Assistant IA pour portail Angular (Simulateur Web MCP)",
-  "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
+  "permissions": ["sidePanel", "activeTab", "tabs", "scripting", "storage"],
   "host_permissions": [
     "http://localhost:*/*",
     "https://votre-portail-angular.com/*",

@@ -6,10 +6,22 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
+import { marked } from 'marked';
 import type { McpTool, McpResource, McpPrompt, ExtensionMessage, ExtensionSettings, SamplingRequest, SamplingResponse } from './types';
+
+// Configure marked : sauts de ligne simples → <br>, liens dans nouvel onglet
+marked.setOptions({ breaks: true, gfm: true });
 
 type StatusType = 'idle' | 'ready' | 'working' | 'error';
 type MessageRole = 'user' | 'assistant' | 'error';
+
+/** Erreur spécifique : le content script n'est plus joignable (extension rechargée sans recharger la page). */
+class ConnectionLostError extends Error {
+  constructor() {
+    super('CONNECTION_LOST__RELOAD_PAGE');
+    this.name = 'ConnectionLostError';
+  }
+}
 
 /**
  * SidePanelController gère l'intégralité du panneau latéral :
@@ -62,15 +74,85 @@ class SidePanelController {
 
   // ── UI helpers ──────────────────────────────────────────────────────────
 
+  /** Affiche un message d'erreur avec un bouton pour recharger la page du portail. */
+  private addReloadMessage(): void {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'message error';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML =
+      '⚠️ <strong>Connexion perdue avec la page.</strong><br>' +
+      "L'extension a été rechargée mais la page n'a pas été actualisée.<br>" +
+      '<button id="reload-page-btn" style="margin-top:8px;padding:5px 12px;background:#ff7900;border:none;border-radius:8px;color:#1a1a1a;font-weight:700;cursor:pointer;font-size:12px;">&#8635; Recharger la page</button>';
+    wrapper.appendChild(bubble);
+    this.chatContainer.appendChild(wrapper);
+    this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    document.getElementById('reload-page-btn')?.addEventListener('click', () => {
+      if (this.activeTabId) chrome.tabs.reload(this.activeTabId);
+    });
+  }
+
   private addMessage(role: MessageRole, text: string): void {
     const wrapper = document.createElement('div');
     wrapper.className = `message ${role}`;
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = text;
+    if (role === 'assistant') {
+      // Rendu Markdown pour les réponses du LLM
+      bubble.classList.add('markdown');
+      bubble.innerHTML = marked.parse(text) as string;
+      // Ouvrir les liens dans un nouvel onglet
+      bubble.querySelectorAll('a').forEach(a => {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      });
+    } else {
+      bubble.textContent = text;
+    }
     wrapper.appendChild(bubble);
     this.chatContainer.appendChild(wrapper);
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+  }
+
+  /** Affiche un bloc chaîne de pensées collapsible (violet, fermé par défaut). */
+  private addThinkingMessage(text: string): void {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'message thinking';
+    const details = document.createElement('details');
+    details.className = 'thought-block';
+    const summary = document.createElement('summary');
+    summary.textContent = '  💭 Chaîne de pensées';
+    const content = document.createElement('div');
+    content.className = 'thought-content';
+    content.textContent = text;
+    details.appendChild(summary);
+    details.appendChild(content);
+    wrapper.appendChild(details);
+    this.chatContainer.appendChild(wrapper);
+    this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+  }
+
+  /** Extrait le texte des parts marquées thought:true dans la réponse Gemini. */
+  private extractThought(response: unknown): string {
+    type Part = Record<string, unknown>;
+    const parts: Part[] =
+      (response as { candidates?: Array<{ content?: { parts?: Part[] } }> })
+        .candidates?.[0]?.content?.parts ?? [];
+    return parts
+      .filter(p => p['thought'] === true)
+      .map(p => String(p['text'] ?? ''))
+      .join('')
+      .trim();
+  }
+
+  /** Envoie le texte de pensée au portail via background → content → CustomEvent. */
+  private sendThinkingToPortal(text: string): void {
+    if (!this.activeTabId) return;
+    chrome.runtime.sendMessage({
+      type: 'THINKING_UPDATE',
+      tabId: this.activeTabId,
+      text,
+    } as ExtensionMessage).catch(() => {});
   }
 
   private setLoading(loading: boolean): void {
@@ -218,13 +300,17 @@ class SidePanelController {
           if (response?.status === 'success') {
             resolve(response.result);
           } else {
-            reject((response?.result as { error?: string } | undefined)?.error ?? 'Erreur inconnue.');
+            const errMsg = (response?.result as { error?: string } | undefined)?.error ?? 'Erreur inconnue.';
+            if (errMsg === 'CONNECTION_LOST__RELOAD_PAGE') {
+              reject(new ConnectionLostError());
+            } else {
+              reject(errMsg);
+            }
           }
         },
       );
     });
   }
-
   // ── Chat Gemini ───────────────────────────────────────────────────────────
 
   private async handleUserMessage(userText: string): Promise<void> {
@@ -244,21 +330,33 @@ class SidePanelController {
         : [];
 
     if (!this.chatSession) {
-      this.chatSession = this.genaiClient.chats.create({
-        model,
-        config: {
-          tools: formattedTools,
-          systemInstruction:
-            'Tu es un assistant IA intégré dans un portail Angular. ' +
-            "Tu peux utiliser les outils mis à ta disposition pour répondre aux demandes de l'utilisateur. " +
-            "Réponds toujours en français sauf si l'utilisateur s'exprime dans une autre langue.",
-        },
-      });
+      // thinkingConfig n'est supporté que par les modèles gemini-2.5-* et thinking-*
+      // Sur les autres modèles (ex: gemini-2.0-flash) il provoque une erreur 400.
+      const supportsThinking = /2\.5|thinking/i.test(model);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const baseConfig: any = {
+        tools: formattedTools,
+        systemInstruction:
+          'Tu es un assistant IA intégré dans un portail Angular. ' +
+          "Tu peux utiliser les outils mis à ta disposition pour répondre aux demandes de l'utilisateur. " +
+          "Réponds toujours en français sauf si l'utilisateur s'exprime dans une autre langue.",
+      };
+      if (supportsThinking) {
+        baseConfig.thinkingConfig = { includeThoughts: true };
+      }
+      this.chatSession = this.genaiClient.chats.create({ model, config: baseConfig });
     }
 
     this.setLoading(true);
     try {
       let response = await this.chatSession.sendMessage({ message: userText });
+
+      // Afficher les pensées initiales (modèles thinking)
+      const initialThought = this.extractThought(response);
+      if (initialThought) {
+        this.addThinkingMessage(initialThought);
+        this.sendThinkingToPortal(initialThought);
+      }
 
       // Boucle de Function Calling
       while (response.functionCalls && response.functionCalls.length > 0) {
@@ -271,6 +369,7 @@ class SidePanelController {
         try {
           portalResult = await this.executeToolOnPortal(toolName, toolArgs);
         } catch (e) {
+          if (e instanceof ConnectionLostError) throw e; // propagé au catch externe
           portalResult = { error: String(e) };
         }
 
@@ -284,15 +383,27 @@ class SidePanelController {
         response = await this.chatSession.sendMessage({
           message: [{ functionResponse: { name: toolName, response: responsePayload } }],
         });
+
+        // Afficher les pensées après chaque appel d'outil
+        const loopThought = this.extractThought(response);
+        if (loopThought) {
+          this.addThinkingMessage(loopThought);
+          this.sendThinkingToPortal(loopThought);
+        }
       }
 
       if (response.text) this.addMessage('assistant', response.text);
       this.setStatus('✅ Prêt', 'ready');
     } catch (err) {
       const error = err as Error;
-      console.error('[MCP SidePanelController] Erreur Gemini :', error);
-      this.addMessage('error', `❌ Erreur : ${error.message ?? String(err)}`);
-      this.setStatus('Erreur', 'error');
+      console.error('[MCP SidePanelController] Erreur :', error);
+      if (err instanceof ConnectionLostError) {
+        this.addReloadMessage();
+        this.setStatus('⚠️ Page à recharger', 'error');
+      } else {
+        this.addMessage('error', `❌ Erreur : ${error.message ?? String(err)}`);
+        this.setStatus('Erreur', 'error');
+      }
       this.chatSession = null;
     } finally {
       this.setLoading(false);
